@@ -66,23 +66,22 @@ p{margin:0}
 .nav ul a.cta:hover{opacity:.85;background:var(--fg);color:var(--bg)}
 @media (max-width:560px){.nav ul a:not(.cta):not(.keep){display:none}}
 
-/* Hero */
-.hero{padding-block:72px 56px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:56px;align-items:end}
-.hero h1{font-size:clamp(36px,5.4vw,64px);line-height:1.04;margin-top:18px}
+/* Hero: compact so the hanging cards land in the first viewport */
+.hero{padding-block:clamp(28px,4.5vh,48px) clamp(20px,3vh,32px);display:grid;gap:14px}
+.hero h1{font-size:clamp(30px,3.6vw,48px);line-height:1.06;max-width:24ch}
+@media (min-width:1100px){.hero h1{max-width:none}}
 .hero h1 em{font-style:normal;color:var(--accent)}
-.hero .lede{font-size:18px;color:var(--muted);max-width:58ch;margin-top:24px}
+.hero-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:end;margin-top:4px}
+.hero .lede{font-size:17px;color:var(--muted);max-width:64ch}
 .hero .lede strong{color:var(--fg);font-weight:500}
-.facts{display:grid;gap:0;border-top:1px solid var(--line)}
-.facts div{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px}
-.facts dt{margin:0}.facts dd{margin:0}
-.quick{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
+.quick{display:flex;flex-wrap:wrap;gap:10px}
 .btn{display:inline-flex;align-items:center;gap:8px;font:500 14.5px/1 var(--body);padding:12px 16px;border-radius:999px;text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;transition:border-color .15s,transform .15s}
 .btn:hover{border-color:var(--fg)}
 .btn.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .btn .arr{font-family:var(--mono);font-size:13px}
 .btn.pending{color:var(--muted);border-style:dashed;cursor:default}
 .btn.pending:hover{border-color:var(--line)}
-@media (max-width:860px){.hero{grid-template-columns:1fr;gap:40px;padding-block:48px 40px}}
+@media (max-width:860px){.hero-row{grid-template-columns:1fr;gap:20px}}
 
 /* Section headers */
 .sec{padding-block:56px}
@@ -90,7 +89,10 @@ p{margin:0}
 .sec-head h2{font-size:28px}
 
 /* Work: cards hung on a sagging line. Each hanger pivots at its clip; the card flips to a holographic back. */
-.rail-hint{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:-12px}
+#work{padding-block:4px 56px}
+.work-head{align-items:flex-end;margin-bottom:4px;padding-bottom:14px}
+.work-head h2{font-size:24px}
+.work-head p{margin-top:6px}
 .rail{position:relative;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;--cw:clamp(178px,15.5vw,196px)}
 .rail-inner{position:relative;min-width:100%}
 .wire{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
@@ -228,7 +230,7 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .device.desk .chrome span{margin-left:10px;font:12px var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .device .vp{position:relative;overflow:hidden}
 .device.phone .vp{position:absolute;inset:0}
-.device iframe{border:0;display:block;background:#fff;transform-origin:0 0}
+.device iframe{border:0;display:block;background:transparent;transform-origin:0 0}
 .device .fallback{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted);font-size:14px;z-index:0}
 .device iframe{position:relative;z-index:1}
 .embed .note{font-size:13.5px;color:var(--muted)}
@@ -254,31 +256,22 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 
 <main id="home" class="wrap">
   <section class="hero" id="top">
-    <div>
-      <p class="mono">Product Designer · New York</p>
-      <h1>I design consumer products people <em>come back to</em>.</h1>
-      <p class="lede">I'm Zhihan (Dee) Liu. I bring a game designer's toolkit to product work: core loops, progression, and social systems, grounded in user research. I prototype my own ideas in code so teams can test them early. <strong>Currently Product Designer at TraderBear.</strong></p>
+    <p class="mono">Zhihan (Dee) Liu · Product Designer · New York</p>
+    <h1>I design consumer products people <em>come back to</em>.</h1>
+    <div class="hero-row">
+      <p class="lede">Consumer fintech, staff tools, and community apps. I turn complex product needs into clear flows and testable prototypes. <strong>Now designing TraderBear at Awesome Bears.</strong></p>
       <div class="quick">
-        <a class="btn primary" href="#work">View work <span class="arr">↓</span></a>
-        <a class="btn" href="#resume" data-resume>Resume <span class="arr">↗</span></a>
+        <a class="btn primary" href="#resume" data-resume>Resume <span class="arr">↗</span></a>
         <a class="btn" href="https://www.linkedin.com/in/zhihan-liu-1856b22ba/" target="_blank" rel="noopener">LinkedIn <span class="arr">↗</span></a>
+        <a class="btn" href="#contact">Contact</a>
       </div>
     </div>
-    <dl class="facts">
-      <div><dt class="mono">Now</dt><dd>Product Designer, TraderBear</dd></div>
-      <div><dt class="mono">Focus</dt><dd>Engagement, community, gamified UX</dd></div>
-      <div><dt class="mono">Education</dt><dd>MFA Design &amp; Technology, Parsons</dd></div>
-      <div><dt class="mono">Before</dt><dd>Lead narrative designer on a shipped mobile RPG</dd></div>
-    </dl>
   </section>
 
   <section class="sec" id="work">
-    <div class="sec-head">
-      <h2>Selected work</h2>
+    <div class="sec-head work-head">
+      <div><h2>Selected work</h2><p class="mono" id="railHint">Hover a card to flip it · Click to open</p></div>
       <span class="mono" id="workCount"></span>
-    </div>
-    <div class="rail-hint">
-      <span class="mono" id="railHint">Hover a card to flip it. Click to open the case study.</span>
     </div>
     <div class="rail" id="rail">
       <div class="rail-inner" id="railInner">
@@ -322,11 +315,11 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
       </div>
       <div class="xp">
         <div><span class="r">Product Designer</span><span class="o">TraderBear · Awesome Bears</span><span class="t">2026 – Now</span></div>
-        <div><span class="r">UI/UX Designer &amp; Content Creator</span><span class="o">Seven Sense, freelance</span><span class="t">2024 – Now</span></div>
+        <div><span class="r">Product Designer &amp; Content Creator</span><span class="o">Seven Sense, freelance</span><span class="t">2024 – Now</span></div>
         <div><span class="r">Co-founder &amp; Chief Designer</span><span class="o">Crystal of Citizens</span><span class="t">2023 – 2025</span></div>
-        <div><span class="r">Lead Narrative Designer</span><span class="o">Rakshasa Street, Sohu.com</span><span class="t"><span class="tbd">years</span></span></div>
+        <div><span class="r">Lead Game Narrative Designer</span><span class="o">Rakshasa Street, Sohu.com</span><span class="t">2021 – 2023</span></div>
         <div><span class="r">MFA Design &amp; Technology</span><span class="o">Parsons School of Design</span><span class="t">2026</span></div>
-        <div><span class="r">BFA</span><span class="o">Beijing Film Academy</span><span class="t"><span class="tbd">year</span></span></div>
+        <div><span class="r">BFA, Film and Television Literature</span><span class="o">Beijing Film Academy</span><span class="t">2021</span></div>
       </div>
     </div>
   </section>
@@ -339,7 +332,7 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
         <p>The fastest way to reach me is email.</p>
       </div>
       <div class="clist">
-        <div class="crow"><span id="email">your.email@example.com</span><button class="copy" type="button" id="copyEmail">Copy</button></div>
+        <div class="crow"><span id="email">didiisliuzhihan@gmail.com</span><button class="copy" type="button" id="copyEmail">Copy</button></div>
         <a class="crow" href="https://www.linkedin.com/in/zhihan-liu-1856b22ba/" target="_blank" rel="noopener"><span>LinkedIn</span><span>↗</span></a>
         <a class="crow" href="#resume" data-resume><span>Resume (PDF)</span><span>↗</span></a>
       </div>
@@ -358,7 +351,7 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 /* ---------- Content ----------
    [[text]] renders as a highlighted placeholder to replace later.
    img: {label, ratio, src?}  add src (file path or data URI) to swap a placeholder for a real image. */
-const RESUME_URL = ""; // e.g. "resume.pdf" once uploaded
+const RESUME_URL = "resume.pdf";
 
 const CASES = [
 {
@@ -370,7 +363,7 @@ const CASES = [
   chips:["Gamification","Community","AI features","Localization"],
   meta:[["Role","Product Designer"],["Team","CEO, co-founder, marketing lead"],["Timeline","2026 – Present"],["Platform","Mobile app"]],
   links:[["Open My Bear in a new tab","https://trader-bear.com/my-bear"],["Figma",""]],
-  embed:{url:"https://trader-bear.com/my-bear", label:"My Bear onboarding, live"},
+  embed:{url:"https://trader-bear.com/my-bear", label:"My Bear onboarding"},
   hero:{label:"Hero: key app screens", ratio:"16/9"},
   tldr:[["Problem","Trading feels risky and full of jargon, so most beginners never start or quit after the first loss."],["What I did","Built a gamification framework, designed AI-powered community mechanics, and led localization design for the mobile app."],["Outcome","[[In progress. Add a launch milestone, test result, or metric]]"]],
   sections:[
@@ -391,7 +384,7 @@ const CASES = [
       {img:{label:"Core loop: community feed and challenge screens",ratio:"16/10"}},
       {img:{label:"Localization: before and after",ratio:"16/9"}}
     ]},
-    {id:"outcome",h:"Outcome",blocks:[{p:"[[Add impact: shipped features, test results, engagement numbers, or team adoption.]]"}]},
+    {id:"outcome",h:"Outcome",blocks:[{p:"TraderBear is live with real customers. [[Add impact: shipped features, test results, or engagement numbers.]]"}]},
     {id:"reflection",h:"Reflection",blocks:[{p:"[[One or two lessons. For example, a trade-off between fun and financial responsibility.]]"}]}
   ]
 },
@@ -402,14 +395,14 @@ const CASES = [
   summary:"A gamified community web app that links a physical gashapon machine to digital identities. Tested with 30+ beta users.",
   subtitle:"A gamified community web app that connects a physical gashapon machine to digital identities, redesigned after testing with 30+ beta users.",
   chips:["User research","Beta testing","Social design","Prototyping"],
-  meta:[["Role","Product Designer, end to end"],["Partner","Community operations team, entertainment company"],["Timeline","2026 · Ongoing"],["Platform","Web, desktop and mobile"]],
+  meta:[["Role","Sole designer and builder"],["Partner","Community operations team, entertainment company"],["Timeline","2026 · Ongoing"],["Platform","Web, desktop and mobile"]],
   links:[["Live prototype",""],["Figma",""]],
   hero:{label:"Hero: gashapon pull screen and avatar",ratio:"16/9"},
   tldr:[["Problem","A gashapon pull is fun once. The community team needed a reason for members to keep coming back between events."],["What I did","Designed the product end to end, ran beta tests with 30+ users, and redesigned the social layer from what I learned."],["Outcome","Passed internal beta. Three new features designed around the strongest signal: acquaintance-based social play."]],
   sections:[
     {id:"context",h:"Context",blocks:[
       {p:"Bad Children Shop extends the Bad Children Paradise character world into a community tool. I designed it with the community operations team of an entertainment company, who wanted to manage and engage their member community."},
-      {p:"The product combines a physical capsule-toy machine with digital avatar identities and a home-building progression mode. I built the prototype myself with React, Three.js, Supabase, and an AI-assisted workflow."},
+      {p:"The product combines a physical capsule-toy machine with digital avatar identities and a home-building progression mode. I designed it in Figma and built a working prototype with Codex, React, Three.js, and Supabase."},
       {img:{label:"System overview: physical machine, app, and community",ratio:"16/9"}}
     ]},
     {id:"research",h:"Research",blocks:[
@@ -423,7 +416,8 @@ const CASES = [
     {id:"solution",h:"Solution",blocks:[
       {cards:[["The Nest","A home space where collected figures interact over time and create small story moments, delivered as postcards that go back into the user's own pool."],["Drift Pool","A shared public machine filled with postcards that users design with stickers and stamps, for others to pull."],["Airdrop","A planned in-person exchange for trading figures and cards, with tasks that unlock deeper content."]]},
       {img:{label:"The Nest: home space screens",ratio:"16/10"}},
-      {img:{label:"Drift Pool: postcard creation and pull flow",ratio:"16/10"}}
+      {img:{label:"Drift Pool: postcard creation and pull flow",ratio:"16/10"}},
+      {p:"Because the capsule animation hid deeper features, I added a direct-open alternative. The prototype also supports keyboard access, reduced motion, and both touch and mouse input."}
     ]},
     {id:"outcome",h:"Outcome",blocks:[{p:"The product passed internal beta with the partner team. The redesigned features are in development. [[Add any numbers: retention, return visits, survey scores, or quotes.]]"}]},
     {id:"reflection",h:"Reflection",blocks:[{p:"Observed sessions changed my priorities more than the survey did. Users rarely describe what they never found, so watching them was the only way to see the gap. [[Edit in your own words]]"}]}
@@ -436,14 +430,15 @@ const CASES = [
   summary:"One app for two audiences: the staff who run an immersive mystery theater, and the guests who play in it.",
   subtitle:"Designing one product for two audiences: the staff who run an immersive mystery theater in Manhattan, and the guests who play in it.",
   chips:["B2B2C","Internal tools","Service design","UI/UX"],
-  meta:[["Role","UI/UX and feature designer"],["Client","Seven Sense, Manhattan"],["Timeline","[[dates]]"],["Platform","[[mobile / web]]"]],
+  meta:[["Role","Product Designer, freelance"],["Client","Seven Sense, Manhattan"],["Timeline","Oct 2024 – Present"],["Platform","[[mobile / web]]"]],
   links:[["Figma",""]],
   hero:{label:"Hero: staff view and guest view side by side",ratio:"16/9"},
-  tldr:[["Problem","[[What was slow or broken for staff and guests before the app?]]"],["What I did","Designed UI, UX, and feature functionality for both the staff-facing and guest-facing sides of the app."],["Outcome","[[Add result: in use, adopted by staff, time saved, guest feedback]]"]],
+  tldr:[["Problem","[[What was slow or broken for staff and guests before the app?]]"],["What I did","Designed UI and features for both the staff and guest sides, built the design system and UI components, and wrote Figma handoff specs with engineering."],["Outcome","[[Add result: in use, adopted by staff, time saved, guest feedback]]"]],
   sections:[
     {id:"context",h:"Context",blocks:[
       {p:"Seven Sense runs immersive mystery theater in Manhattan. I have freelanced there since October 2024, first on social content, which gave me close knowledge of how a show night actually runs."},
-      {p:"That access shaped the product work: I could observe staff and guests directly instead of guessing."}
+      {p:"That access shaped the product work: I could observe staff and guests directly instead of guessing."},
+      {p:"I work with the development team in an agile workflow, discussing design intent, technical constraints, and implementation trade-offs across staff and guest flows."}
     ]},
     {id:"users",h:"Two audiences",blocks:[
       {cards:[["Staff","Need speed and clarity under show-night pressure. [[Add their key tasks]]"],["Guests","Need to stay immersed without friction. [[Add their key tasks]]"]]}
@@ -455,6 +450,7 @@ const CASES = [
     {id:"solution",h:"Solution",blocks:[
       {img:{label:"Staff-facing screens",ratio:"16/10"}},
       {img:{label:"Guest-facing screens",ratio:"16/10"}},
+      {img:{label:"Design system: UI components and Figma handoff spec",ratio:"16/10"}},
       {p:"[[Explain 2 to 3 key design decisions.]]"}
     ]},
     {id:"outcome",h:"Outcome",blocks:[{p:"[[Add impact and next steps.]]"}]}
@@ -508,13 +504,13 @@ const chips=c=>`<div class="chips">${c.map(x=>`<span class="chip">${esc(x)}</spa
 /* ---------- Home: hanging cards ---------- */
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer=matchMedia("(hover: hover) and (pointer: fine)").matches;
-const STRING=[56,70,62,74,58];           // string lengths, slightly uneven like real clips
+const STRING=[44,58,50,62,46];           // string lengths, slightly uneven like real clips
 const hangers=[];
 
 function renderHome(){
   const feats=CASES.filter(c=>c.kind==="feature"), minis=CASES.filter(c=>c.kind==="mini");
   document.getElementById("workCount").textContent=`${feats.length} case studies · ${minis.length} exercises`;
-  if(!finePointer) document.getElementById("railHint").textContent="Tap a card to flip it, tap again to open. Swipe for more.";
+  if(!finePointer) document.getElementById("railHint").textContent="Tap a card to flip it · Tap again to open · Swipe for more";
   const inner=document.getElementById("railInner");
   CASES.forEach((c,i)=>{
     const isCase=c.kind==="feature";
@@ -569,7 +565,7 @@ function layoutRail(){
   const rail=document.getElementById("rail"), inner=document.getElementById("railInner"), svg=document.getElementById("wire");
   const n=hangers.length, cw=hangers[0].el.offsetWidth, gap=24;
   const W=Math.max(rail.clientWidth, n*cw+(n-1)*gap+40);
-  const y0=26, sag=30, pad=(W-(n*cw+(n-1)*gap))/2;
+  const y0=22, sag=28, pad=(W-(n*cw+(n-1)*gap))/2;
   const cardH=cw*288/200;
   let maxBottom=0;
   hangers.forEach((h,i)=>{
@@ -578,7 +574,7 @@ function layoutRail(){
     h.string.style.height=L+"px";
     maxBottom=Math.max(maxBottom,py+L+cardH);
   });
-  const H=Math.ceil(maxBottom+48);
+  const H=Math.ceil(maxBottom+36);
   inner.style.width=W+"px"; inner.style.height=H+"px";
   svg.setAttribute("width",W); svg.setAttribute("height",H);
   svg.innerHTML=`<path d="M8 ${y0} Q ${W/2} ${y0+2*sag} ${W-8} ${y0}"/><circle cx="8" cy="${y0}" r="4"/><circle cx="${W-8}" cy="${y0}" r="4"/>`;
