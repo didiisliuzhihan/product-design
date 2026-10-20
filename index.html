@@ -15,6 +15,8 @@
   --bg:#F3F4F7; --surface:#FFFFFF; --fg:#12141A; --muted:#5B6070; --line:#DCDFE7;
   --accent:#2C42E6; --accent-soft:#E3E7FF; --ph:#E7E9EF; --ph-ink:#7A8091;
   --t1:#E6E9F7; --t2:#F1E9E4; --t3:#E5EFEA; --t4:#EDE8F3; --t5:#EAEFF2;
+  --wire:#A7ADBB; --shadow:rgba(22,26,44,.38);
+  --h1:#F3DDFF; --h2:#D7E5FF; --h3:#D3FAEC; --h4:#FFF0CF; --holo-ink:#161922;
   --display:"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
   --body:"Geist", -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono:"Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -25,6 +27,8 @@
     --bg:#0E1015; --surface:#161922; --fg:#ECEEF3; --muted:#9198A8; --line:#262A35;
     --accent:#8C9CFF; --accent-soft:#1E2344; --ph:#1A1D26; --ph-ink:#7D8496;
     --t1:#191D2C; --t2:#221C1A; --t3:#17201C; --t4:#1F1B26; --t5:#172025;
+    --wire:#4C5263; --shadow:rgba(0,0,0,.75);
+    --h1:#3B2B57; --h2:#21375B; --h3:#1B463F; --h4:#4A3E24; --holo-ink:#F1F2F7;
     color-scheme:dark;
   }
 }
@@ -32,6 +36,8 @@
   --bg:#0E1015; --surface:#161922; --fg:#ECEEF3; --muted:#9198A8; --line:#262A35;
   --accent:#8C9CFF; --accent-soft:#1E2344; --ph:#1A1D26; --ph-ink:#7D8496;
   --t1:#191D2C; --t2:#221C1A; --t3:#17201C; --t4:#1F1B26; --t5:#172025;
+  --wire:#4C5263; --shadow:rgba(0,0,0,.75);
+  --h1:#3B2B57; --h2:#21375B; --h3:#1B463F; --h4:#4A3E24; --holo-ink:#F1F2F7;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -83,29 +89,42 @@ p{margin:0}
 .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:32px;flex-wrap:wrap}
 .sec-head h2{font-size:28px}
 
-/* Work cards */
-.feature{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:40px;align-items:center;text-decoration:none;padding-block:8px 40px}
-.feature + .feature{padding-top:40px;border-top:1px solid var(--line)}
-.feature .ph{transition:transform .35s ease}
-.feature:hover .ph{transform:scale(1.012)}
-.feature h3{font-size:clamp(28px,3.2vw,38px);line-height:1.08;margin-top:10px}
-.feature p.sum{color:var(--muted);margin-top:14px;font-size:16.5px;max-width:46ch}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px}
-.chip{font-size:12.5px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
-.read{display:inline-flex;gap:8px;margin-top:24px;font-weight:500;font-size:15px;color:var(--accent)}
-.read span{transition:transform .2s}
-.feature:hover .read span,.mini:hover .read span{transform:translateX(4px)}
-@media (max-width:860px){.feature{grid-template-columns:1fr;gap:24px}}
-
-.sub-head{display:flex;align-items:baseline;gap:12px;margin:24px 0 20px;flex-wrap:wrap}
-.sub-head h3{font-size:20px}
-.minis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
-.mini{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 12px 24px;transition:border-color .2s}
-.mini:hover{border-color:var(--fg)}
-.mini .body{padding:18px 8px 0}
-.mini h4{font-family:var(--display);font-weight:500;font-size:22px;margin:8px 0 0;letter-spacing:-.01em}
-.mini p{color:var(--muted);margin-top:8px;font-size:15px}
-@media (max-width:720px){.minis{grid-template-columns:1fr}}
+/* Work: cards hung on a sagging line. Each hanger pivots at its clip; the card flips to a holographic back. */
+.rail-hint{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:-12px}
+.rail{position:relative;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;--cw:clamp(184px,16.5vw,208px)}
+.rail-inner{position:relative;min-width:100%}
+.wire{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.wire path{fill:none;stroke:var(--wire);stroke-width:1.5}
+.wire circle{fill:var(--bg);stroke:var(--wire);stroke-width:1.5}
+.hanger{position:absolute;width:var(--cw);transform-origin:50% 0;will-change:transform;perspective:1100px;--tilt:0}
+.clip{position:absolute;left:50%;top:-8px;width:10px;height:15px;transform:translateX(-50%);border:1.5px solid var(--wire);border-radius:3px;background:var(--bg);z-index:2}
+.string{display:block;width:1.5px;margin:0 auto;background:var(--wire)}
+.card3d{position:relative;display:block;width:100%;aspect-ratio:200/288;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.2,.75,.2,1);text-decoration:none;color:inherit;border-radius:14px;outline:none}
+.hanger.flipped .card3d{transform:rotateY(180deg)}
+.card3d:focus-visible{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:22px 12px 14px;display:flex;flex-direction:column;gap:9px;border:1px solid var(--line);overflow:hidden;box-shadow:0 22px 34px -22px var(--shadow)}
+.face::before{content:"";position:absolute;top:8px;left:50%;width:30px;height:6px;transform:translateX(-50%);border-radius:3px;background:var(--bg);border:1px solid var(--line)}
+.front{background:var(--surface)}
+.ctop{display:flex;justify-content:space-between;gap:8px}
+.ctop .mono{font-size:10.5px}
+.cimg .ph{border-radius:9px}
+.cimg .ph .lbl{gap:2px;padding:8px}
+.cimg .ph .lbl b{font-size:10px}
+.cimg .ph .lbl span{font-size:12px;line-height:1.35}
+.cname{font-family:var(--display);font-weight:500;font-size:19px;line-height:1.1;letter-spacing:-.01em;margin-top:2px}
+.crole{font-size:12.5px;color:var(--muted);margin-top:-4px}
+.back{transform:rotateY(180deg);color:var(--holo-ink);border-color:transparent;
+  background:linear-gradient(calc(125deg + var(--tilt) * 3deg),var(--h1),var(--h2) 28%,var(--h3) 52%,var(--h4) 76%,var(--h1));
+  background-size:240% 240%;background-position:calc(50% + var(--tilt) * 4%) 50%}
+.back::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 60% at calc(30% + var(--tilt) * 6%) 0%,rgba(255,255,255,.55),transparent 60%);mix-blend-mode:soft-light}
+.back .mono{color:inherit;opacity:.65;font-size:10.5px}
+.back h4{font-family:var(--display);font-weight:500;font-size:21px;line-height:1.08;margin:0;letter-spacing:-.01em}
+.bsum{font-size:13px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.bmeta{display:grid;gap:4px;margin:auto 0 0;font-size:12px}
+.bmeta div{display:grid;grid-template-columns:62px minmax(0,1fr);gap:6px}
+.bmeta dt{opacity:.6}.bmeta dd{margin:0}
+.bcta{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:13px;padding-top:9px;border-top:1px solid color-mix(in srgb,var(--holo-ink) 18%,transparent)}
+.work-index{margin-top:40px}
 
 /* Placeholders */
 .ph{position:relative;margin:0;width:100%;max-width:100%;border-radius:var(--radius);background:var(--tint,var(--ph));overflow:hidden;display:grid;place-items:center;border:1px solid var(--line)}
@@ -237,12 +256,15 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
       <h2>Selected work</h2>
       <span class="mono" id="workCount"></span>
     </div>
-    <div id="features"></div>
-    <div class="sub-head">
-      <h3>Design exercises</h3>
-      <span class="mono">Take-home challenges</span>
+    <div class="rail-hint">
+      <span class="mono" id="railHint">Hover a card to flip it. Click to open the case study.</span>
     </div>
-    <div class="minis" id="minis"></div>
+    <div class="rail" id="rail">
+      <div class="rail-inner" id="railInner">
+        <svg class="wire" id="wire" aria-hidden="true"></svg>
+      </div>
+    </div>
+    <div class="links work-index" id="workIndex"></div>
   </section>
 
   <section class="sec" id="more">
@@ -461,30 +483,117 @@ const fmt=s=>esc(s).replace(/\[\[(.+?)\]\]/g,'<span class="tbd">$1</span>');
 const ph=(img,tint)=>`<figure class="ph" style="aspect-ratio:${img.ratio};${tint?`--tint:var(${tint})`:""}">${img.src?`<img src="${esc(img.src)}" alt="${esc(img.label)}" loading="lazy">`:`<div class="lbl"><b>Image · ${esc(img.ratio.replace("/",":"))}</b><span>${esc(img.label)}</span></div>`}</figure>`;
 const chips=c=>`<div class="chips">${c.map(x=>`<span class="chip">${esc(x)}</span>`).join("")}</div>`;
 
+/* ---------- Home: hanging cards ---------- */
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const finePointer=matchMedia("(hover: hover) and (pointer: fine)").matches;
+const STRING=[56,70,62,74,58];           // string lengths, slightly uneven like real clips
+const hangers=[];
+
 function renderHome(){
   const feats=CASES.filter(c=>c.kind==="feature"), minis=CASES.filter(c=>c.kind==="mini");
   document.getElementById("workCount").textContent=`${feats.length} case studies · ${minis.length} exercises`;
-  document.getElementById("features").innerHTML=feats.map(c=>`
-    <a class="feature" href="#${c.id}">
-      ${ph(c.hero,c.tint)}
-      <div>
-        <p class="mono">${fmt(c.eyebrow)} · ${fmt(c.year)}</p>
-        <h3>${fmt(c.title)}</h3>
-        <p class="sum">${fmt(c.summary)}</p>
-        ${chips(c.chips)}
-        <span class="read">Read case study <span>→</span></span>
-      </div>
-    </a>`).join("");
-  document.getElementById("minis").innerHTML=minis.map(c=>`
-    <a class="mini" href="#${c.id}">
-      ${ph({label:c.hero.label,ratio:"16/10",src:c.hero.src},c.tint)}
-      <div class="body">
-        <p class="mono">${fmt(c.eyebrow)}</p>
-        <h4>${fmt(c.title)}</h4>
-        <p>${fmt(c.summary)}</p>
-        <span class="read">View exercise <span>→</span></span>
-      </div>
-    </a>`).join("");
+  if(!finePointer) document.getElementById("railHint").textContent="Tap a card to flip it, tap again to open. Swipe for more.";
+  const inner=document.getElementById("railInner");
+  CASES.forEach((c,i)=>{
+    const isCase=c.kind==="feature";
+    const el=document.createElement("div");
+    el.className="hanger";
+    el.innerHTML=`
+      <span class="clip"></span><span class="string"></span>
+      <a class="card3d" href="#${c.id}" aria-label="${esc(c.title)}: ${isCase?"read case study":"view exercise"}">
+        <div class="face front">
+          <div class="ctop"><span class="mono">${fmt(c.eyebrow.split(" · ")[0])}</span><span class="mono">${fmt(c.year)}</span></div>
+          <div class="cimg">${ph({label:c.hero.label,ratio:"1/1",src:c.hero.src},c.tint)}</div>
+          <div class="cname">${fmt(c.title)}</div>
+          <div class="crole">${fmt(c.meta[0][1])}</div>
+        </div>
+        <div class="face back">
+          <p class="mono">${isCase?"Case study":"Design exercise"} · ${fmt(c.year)}</p>
+          <h4>${fmt(c.title)}</h4>
+          <p class="bsum">${fmt(c.summary)}</p>
+          <dl class="bmeta">
+            <div><dt>${esc(c.meta[0][0])}</dt><dd>${fmt(c.meta[0][1])}</dd></div>
+            <div><dt>${esc(c.meta[3][0])}</dt><dd>${fmt(c.meta[3][1])}</dd></div>
+          </dl>
+          <span class="bcta">${isCase?"Read case study":"View exercise"} <span>→</span></span>
+        </div>
+      </a>`;
+    inner.appendChild(el);
+    const h={el,card:el.querySelector(".card3d"),string:el.querySelector(".string"),theta:0,omega:0,i};
+    hangers.push(h);
+    const flip=on=>{ if(el.classList.contains("flipped")===on) return; el.classList.toggle("flipped",on); kick(h,(on?1:-1)*(1.1+Math.random()*.6)); };
+    if(finePointer){
+      el.addEventListener("mouseenter",()=>flip(true));
+      el.addEventListener("mouseleave",()=>flip(false));
+    }else{
+      h.card.addEventListener("click",e=>{
+        if(!el.classList.contains("flipped")){ e.preventDefault(); hangers.forEach(o=>o!==h&&o.el.classList.remove("flipped")); flip(true); }
+      });
+    }
+    h.card.addEventListener("focus",()=>flip(true));
+    h.card.addEventListener("blur",()=>flip(false));
+  });
+  // Plain index under the line, for quick scanning
+  document.getElementById("workIndex").innerHTML=CASES.map(c=>`
+    <a class="lrow" href="#${c.id}"><span class="n">${fmt(c.title)}</span><span class="d">${fmt(c.summary)}</span><span class="y">${c.kind==="feature"?"Case study":"Exercise"}</span><span class="go">→</span></a>`).join("");
+  layoutRail();
+  addEventListener("resize",layoutRail);
+  bindSwing();
+  // entrance: cards sway in from a light breeze
+  hangers.forEach((h,i)=>setTimeout(()=>kick(h,(i%2?-1:1)*.9),120+i*110));
+}
+
+function layoutRail(){
+  const rail=document.getElementById("rail"), inner=document.getElementById("railInner"), svg=document.getElementById("wire");
+  const n=hangers.length, cw=hangers[0].el.offsetWidth, gap=28;
+  const W=Math.max(rail.clientWidth, n*cw+(n-1)*gap+48);
+  const y0=26, sag=30, pad=(W-(n*cw+(n-1)*gap))/2;
+  const cardH=cw*288/200;
+  let maxBottom=0;
+  hangers.forEach((h,i)=>{
+    const x=pad+cw/2+i*(cw+gap), t=x/W, py=y0+4*sag*t*(1-t), L=STRING[i%STRING.length];
+    h.el.style.left=(x-cw/2)+"px"; h.el.style.top=py+"px";
+    h.string.style.height=L+"px";
+    maxBottom=Math.max(maxBottom,py+L+cardH);
+  });
+  const H=Math.ceil(maxBottom+48);
+  inner.style.width=W+"px"; inner.style.height=H+"px";
+  svg.setAttribute("width",W); svg.setAttribute("height",H);
+  svg.innerHTML=`<path d="M8 ${y0} Q ${W/2} ${y0+2*sag} ${W-8} ${y0}"/><circle cx="8" cy="${y0}" r="4"/><circle cx="${W-8}" cy="${y0}" r="4"/>`;
+}
+
+/* Damped pendulum per card */
+const K=26, DAMP=1.7, MAXT=.55;
+let raf=0, lastT=0;
+function kick(h,w){ if(reduced) return; h.omega+=w; if(!raf){ lastT=performance.now(); raf=requestAnimationFrame(step); } }
+function step(ts){
+  const dt=Math.min(.033,Math.max(.001,(ts-lastT)/1000)); lastT=ts;
+  let active=false;
+  for(const h of hangers){
+    h.omega+=(-K*h.theta-DAMP*h.omega)*dt;
+    h.theta=Math.max(-MAXT,Math.min(MAXT,h.theta+h.omega*dt));
+    if(Math.abs(h.theta)>.0006||Math.abs(h.omega)>.0006) active=true; else { h.theta=0; h.omega=0; }
+    const deg=h.theta*57.2958;
+    h.el.style.transform=`rotate(${deg.toFixed(3)}deg)`;
+    h.el.style.setProperty("--tilt",deg.toFixed(2));
+  }
+  raf=active?requestAnimationFrame(step):0;
+}
+function bindSwing(){
+  const rail=document.getElementById("rail");
+  let lp=null;
+  rail.addEventListener("pointermove",e=>{
+    const now=performance.now();
+    if(lp){
+      const dts=Math.max(.008,(now-lp.t)/1000), vx=(e.clientX-lp.x)/dts;
+      for(const h of hangers){
+        const r=h.card.getBoundingClientRect();
+        if(e.clientX>r.left-12&&e.clientX<r.right+12&&e.clientY>r.top&&e.clientY<r.bottom) kick(h,Math.max(-.6,Math.min(.6,-vx*.0045*dts)));
+      }
+    }
+    lp={x:e.clientX,t:now};
+  },{passive:true});
+  rail.addEventListener("pointerleave",()=>lp=null);
 }
 
 function block(b){
@@ -547,6 +656,7 @@ function route(){
   }else{
     const wasCase=!cs.hidden;
     cs.hidden=true; home.hidden=false; document.title="Zhihan Liu Portfolio";
+    if(wasCase){ layoutRail(); hangers.forEach(h=>h.el.classList.remove("flipped")); }
     if(h==="resume"){ return; }
     const el=h?document.getElementById(h):null;
     if(el){ requestAnimationFrame(()=>el.scrollIntoView({behavior:wasCase?"auto":"smooth"})); }
