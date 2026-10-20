@@ -114,12 +114,12 @@ p{margin:0}
 .cimg .ph .lbl span{font-size:12px;line-height:1.35}
 .cname{font-family:var(--display);font-weight:500;font-size:18px;line-height:1.1;letter-spacing:-.01em;margin-top:2px}
 .crole{font-size:12.5px;color:var(--muted);margin-top:-4px}
-.back{transform:rotateY(180deg);color:var(--holo-ink);border-color:transparent;
+.bface{transform:rotateY(180deg);color:var(--holo-ink);border-color:transparent;
   background:linear-gradient(calc(125deg + var(--tilt) * 3deg),var(--h1),var(--h2) 28%,var(--h3) 52%,var(--h4) 76%,var(--h1));
   background-size:240% 240%;background-position:calc(50% + var(--tilt) * 4%) 50%}
-.back::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 60% at calc(30% + var(--tilt) * 6%) 0%,rgba(255,255,255,.55),transparent 60%);mix-blend-mode:soft-light}
-.back .mono{color:inherit;opacity:.65;font-size:10.5px}
-.back h4{font-family:var(--display);font-weight:500;font-size:21px;line-height:1.08;margin:0;letter-spacing:-.01em}
+.bface::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 60% at calc(30% + var(--tilt) * 6%) 0%,rgba(255,255,255,.55),transparent 60%);mix-blend-mode:soft-light}
+.bface .mono{color:inherit;opacity:.65;font-size:10.5px}
+.bface h4{font-family:var(--display);font-weight:500;font-size:21px;line-height:1.08;margin:0;letter-spacing:-.01em}
 .bsum{font-size:13px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
 .bmeta{display:grid;gap:4px;margin:auto 0 0;font-size:12px}
 .bmeta div{display:grid;grid-template-columns:62px minmax(0,1fr);gap:6px}
@@ -212,6 +212,26 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .cards div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
 .cards b{display:block;font-family:var(--display);font-weight:500;font-size:19px}
 .cards span{display:block;color:var(--muted);font-size:15px;margin-top:8px}
+/* Live embed: the real product inside a device frame */
+.embed{margin-top:40px;border:1px solid var(--line);border-radius:20px;background:var(--tint,var(--ph));padding:20px 20px 28px;display:grid;gap:18px}
+.embed-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.seg{display:inline-flex;padding:3px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.seg button{font:500 13px var(--body);border:0;background:transparent;color:var(--muted);padding:7px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.stage{display:grid;place-items:center;min-width:0}
+.device{position:relative;background:var(--surface);overflow:hidden;box-shadow:0 30px 60px -30px var(--shadow)}
+.device.phone{width:min(390px,100%);height:760px;border-radius:44px;border:10px solid var(--fg)}
+.device.phone::before{content:"";position:absolute;top:10px;left:50%;width:96px;height:26px;transform:translateX(-50%);border-radius:20px;background:var(--fg);z-index:2}
+.device.desk{width:100%;border-radius:12px;border:1px solid var(--line)}
+.device.desk .chrome{display:flex;align-items:center;gap:6px;height:34px;padding-inline:12px;border-bottom:1px solid var(--line);background:var(--bg)}
+.device.desk .chrome i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.device.desk .chrome span{margin-left:10px;font:12px var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.device .vp{position:relative;overflow:hidden}
+.device.phone .vp{position:absolute;inset:0}
+.device iframe{border:0;display:block;background:#fff;transform-origin:0 0}
+.device .fallback{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted);font-size:14px;z-index:0}
+.device iframe{position:relative;z-index:1}
+.embed .note{font-size:13.5px;color:var(--muted)}
 .next{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:24px;text-decoration:none;padding:40px 0;border-top:1px solid var(--line);margin-top:48px}
 .next h3{font-size:clamp(28px,4vw,44px);margin-top:8px}
 .next .go{font-family:var(--mono);font-size:24px;color:var(--accent);transition:transform .2s}
@@ -349,7 +369,8 @@ const CASES = [
   subtitle:"Designing a gamified, AI-powered community that helps people who have never traded understand it, try it, and come back.",
   chips:["Gamification","Community","AI features","Localization"],
   meta:[["Role","Product Designer"],["Team","CEO, co-founder, marketing lead"],["Timeline","2026 – Present"],["Platform","Mobile app"]],
-  links:[["Product site",""],["Figma",""]],
+  links:[["Open My Bear in a new tab","https://trader-bear.com/my-bear"],["Figma",""]],
+  embed:{url:"https://trader-bear.com/my-bear", label:"My Bear onboarding, live"},
   hero:{label:"Hero: key app screens", ratio:"16/9"},
   tldr:[["Problem","Trading feels risky and full of jargon, so most beginners never start or quit after the first loss."],["What I did","Built a gamification framework, designed AI-powered community mechanics, and led localization design for the mobile app."],["Outcome","[[In progress. Add a launch milestone, test result, or metric]]"]],
   sections:[
@@ -508,7 +529,7 @@ function renderHome(){
           <div class="cname">${fmt(c.title)}</div>
           <div class="crole">${fmt(c.meta[0][1])}</div>
         </div>
-        <div class="face back">
+        <div class="face bface">
           <p class="mono">${isCase?"Case study":"Design exercise"} · ${fmt(c.year)}</p>
           <h4>${fmt(c.title)}</h4>
           <p class="bsum">${fmt(c.summary)}</p>
@@ -606,6 +627,40 @@ function block(b){
   return "";
 }
 
+function embedHTML(c){
+  const host=c.embed.url.replace(/^https?:\/\//,"");
+  return `<section class="embed" style="--tint:var(${c.tint})" aria-label="Live product">
+    <div class="embed-bar">
+      <span class="mono">Live product · ${esc(c.embed.label)}</span>
+      <div class="seg" role="group" aria-label="Preview size">
+        <button type="button" data-mode="phone" aria-pressed="true">Mobile</button>
+        <button type="button" data-mode="desk" aria-pressed="false">Desktop</button>
+      </div>
+    </div>
+    <div class="stage"><div class="device phone" id="device">
+      <div class="chrome" hidden><i></i><i></i><i></i><span>${esc(host)}</span></div>
+      <div class="vp" id="vp">
+        <div class="fallback">The live preview could not load here.<br>Use “Open My Bear in a new tab” above.</div>
+        <iframe id="liveFrame" src="${esc(c.embed.url)}" title="${esc(c.title)} live product" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div></div>
+    <p class="note">This is the real product, not a screenshot. Scroll and tap inside the frame.</p>
+  </section>`;
+}
+function wireEmbed(){
+  const dev=document.getElementById("device"); if(!dev) return;
+  const vp=document.getElementById("vp"), fr=document.getElementById("liveFrame"), chrome=dev.querySelector(".chrome");
+  const size=()=>{
+    if(dev.classList.contains("phone")){ fr.style.width="100%"; fr.style.height="100%"; fr.style.transform="none"; vp.style.height=""; }
+    else{ const W=1280,H=800,s=Math.min(1,vp.clientWidth/W); fr.style.width=W+"px"; fr.style.height=H+"px"; fr.style.transform=`scale(${s})`; vp.style.height=(H*s)+"px"; }
+  };
+  document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    dev.className="device "+b.dataset.mode; chrome.hidden=b.dataset.mode!=="desk"; size();
+  }));
+  addEventListener("resize",size); size();
+}
+
 function renderCase(c){
   const i=CASES.indexOf(c), nx=CASES[(i+1)%CASES.length];
   const links=c.links.map(([t,u])=>u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} <span class="arr">↗</span></a>`:`<span class="btn pending" title="Link coming soon">${esc(t)} · link coming</span>`).join("");
@@ -617,7 +672,7 @@ function renderCase(c){
       <p class="subtitle">${fmt(c.subtitle)}</p>
       <dl class="meta">${c.meta.map(([k,v])=>`<div><dt class="mono">${esc(k)}</dt><dd>${fmt(v)}</dd></div>`).join("")}</dl>
       <div class="case-links">${links}</div>
-      <div class="case-hero">${ph(c.hero,c.tint)}</div>
+      ${c.embed?embedHTML(c):`<div class="case-hero">${ph(c.hero,c.tint)}</div>`}
       <div class="tldr">${c.tldr.map(([k,v])=>`<div><p class="mono">${esc(k)}</p><p>${fmt(v)}</p></div>`).join("")}</div>
     </section>
     <div class="case-body">
@@ -633,6 +688,7 @@ function renderCase(c){
   }));
   // section headers: hide the duplicate eyebrow (keeps markup uniform)
   document.querySelectorAll(".chapter > .mono").forEach(m=>m.remove());
+  wireEmbed();
   spy();
 }
 
