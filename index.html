@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zhihan Liu Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 1200px column, left-aligned editorial grid. Home = hero + work index + links + about.
+   Case study = header + meta strip + sticky section TOC (desktop) beside a 680px reading column. */
+:root{
+  --bg:#F3F4F7; --surface:#FFFFFF; --fg:#12141A; --muted:#5B6070; --line:#DCDFE7;
+  --accent:#2C42E6; --accent-soft:#E3E7FF; --ph:#E7E9EF; --ph-ink:#7A8091;
+  --t1:#E6E9F7; --t2:#F1E9E4; --t3:#E5EFEA; --t4:#EDE8F3; --t5:#EAEFF2;
+  --display:"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body:"Geist", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius:14px; --max:1200px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1015; --surface:#161922; --fg:#ECEEF3; --muted:#9198A8; --line:#262A35;
+    --accent:#8C9CFF; --accent-soft:#1E2344; --ph:#1A1D26; --ph-ink:#7D8496;
+    --t1:#191D2C; --t2:#221C1A; --t3:#17201C; --t4:#1F1B26; --t5:#172025;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1015; --surface:#161922; --fg:#ECEEF3; --muted:#9198A8; --line:#262A35;
+  --accent:#8C9CFF; --accent-soft:#1E2344; --ph:#1A1D26; --ph-ink:#7D8496;
+  --t1:#191D2C; --t2:#221C1A; --t3:#17201C; --t4:#1F1B26; --t5:#172025;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--max);margin:0 auto;padding-left:max(24px, env(safe-area-inset-left,0px));padding-right:max(24px, env(safe-area-inset-right,0px))}
+@media (max-width:480px){.wrap{padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}}
+.mono{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;letter-spacing:-.015em}
+p{margin:0}
+.tbd{color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:0 .3em;font-style:normal}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
+.nav.scrolled{border-bottom-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.brand{font-family:var(--display);font-weight:600;font-size:18px;text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
+.nav ul{list-style:none;display:flex;gap:4px;margin:0;padding:0}
+.nav ul a{display:block;text-decoration:none;font-size:14.5px;padding:8px 12px;border-radius:999px;color:var(--muted);transition:color .15s,background .15s}
+.nav ul a:hover{color:var(--fg);background:var(--surface)}
+.nav ul a.cta{color:var(--bg);background:var(--fg)}
+.nav ul a.cta:hover{opacity:.85;background:var(--fg);color:var(--bg)}
+@media (max-width:560px){.nav ul a:not(.cta):not(.keep){display:none}}
+
+/* Hero */
+.hero{padding-block:72px 56px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:56px;align-items:end}
+.hero h1{font-size:clamp(36px,5.4vw,64px);line-height:1.04;margin-top:18px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{font-size:18px;color:var(--muted);max-width:58ch;margin-top:24px}
+.hero .lede strong{color:var(--fg);font-weight:500}
+.facts{display:grid;gap:0;border-top:1px solid var(--line)}
+.facts div{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.facts dt{margin:0}.facts dd{margin:0}
+.quick{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:500 14.5px/1 var(--body);padding:12px 16px;border-radius:999px;text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;transition:border-color .15s,transform .15s}
+.btn:hover{border-color:var(--fg)}
+.btn.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn .arr{font-family:var(--mono);font-size:13px}
+.btn.pending{color:var(--muted);border-style:dashed;cursor:default}
+.btn.pending:hover{border-color:var(--line)}
+@media (max-width:860px){.hero{grid-template-columns:1fr;gap:40px;padding-block:48px 40px}}
+
+/* Section headers */
+.sec{padding-block:56px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:32px;flex-wrap:wrap}
+.sec-head h2{font-size:28px}
+
+/* Work cards */
+.feature{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:40px;align-items:center;text-decoration:none;padding-block:8px 40px}
+.feature + .feature{padding-top:40px;border-top:1px solid var(--line)}
+.feature .ph{transition:transform .35s ease}
+.feature:hover .ph{transform:scale(1.012)}
+.feature h3{font-size:clamp(28px,3.2vw,38px);line-height:1.08;margin-top:10px}
+.feature p.sum{color:var(--muted);margin-top:14px;font-size:16.5px;max-width:46ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px}
+.chip{font-size:12.5px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.read{display:inline-flex;gap:8px;margin-top:24px;font-weight:500;font-size:15px;color:var(--accent)}
+.read span{transition:transform .2s}
+.feature:hover .read span,.mini:hover .read span{transform:translateX(4px)}
+@media (max-width:860px){.feature{grid-template-columns:1fr;gap:24px}}
+
+.sub-head{display:flex;align-items:baseline;gap:12px;margin:24px 0 20px;flex-wrap:wrap}
+.sub-head h3{font-size:20px}
+.minis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.mini{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 12px 24px;transition:border-color .2s}
+.mini:hover{border-color:var(--fg)}
+.mini .body{padding:18px 8px 0}
+.mini h4{font-family:var(--display);font-weight:500;font-size:22px;margin:8px 0 0;letter-spacing:-.01em}
+.mini p{color:var(--muted);margin-top:8px;font-size:15px}
+@media (max-width:720px){.minis{grid-template-columns:1fr}}
+
+/* Placeholders */
+.ph{position:relative;margin:0;width:100%;max-width:100%;border-radius:var(--radius);background:var(--tint,var(--ph));overflow:hidden;display:grid;place-items:center;border:1px solid var(--line)}
+.ph::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,transparent 0 14px,color-mix(in srgb,var(--ph-ink) 9%,transparent) 14px 15px)}
+.ph .lbl{position:relative;display:grid;gap:4px;text-align:center;padding:16px;max-width:80%}
+.ph .lbl b{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ph-ink)}
+.ph .lbl span{font-size:14px;color:var(--muted)}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* Link index */
+.links{border-top:1px solid var(--line)}
+.lrow{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,2.4fr) 90px 24px;gap:16px;align-items:center;padding:18px 4px;border-bottom:1px solid var(--line);text-decoration:none;transition:background .15s}
+.lrow:hover{background:var(--surface)}
+.lrow .n{font-family:var(--display);font-size:19px;font-weight:500}
+.lrow .d{color:var(--muted);font-size:14.5px}
+.lrow .y{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.lrow .go{font-family:var(--mono);color:var(--accent)}
+@media (max-width:720px){.lrow{grid-template-columns:minmax(0,1fr) 24px}.lrow .d,.lrow .y{grid-column:1}.lrow .go{grid-row:1;grid-column:2}}
+
+/* About */
+.about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px}
+.about p+p{margin-top:16px}
+.about .big{font-family:var(--display);font-size:24px;line-height:1.35;letter-spacing:-.01em}
+.principles{display:grid;gap:18px;margin-top:32px}
+.principles div{display:grid;grid-template-columns:20px minmax(0,1fr);gap:12px}
+.principles i{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:9px;font-style:normal}
+.principles b{font-weight:600}
+.principles span{color:var(--muted)}
+.xp{border-top:1px solid var(--line)}
+.xp div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.xp .r{font-weight:500}
+.xp .o{color:var(--muted);font-size:14.5px;grid-column:1}
+.xp .t{font-family:var(--mono);font-size:13px;color:var(--muted);grid-row:1;grid-column:2;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:860px){.about{grid-template-columns:1fr;gap:40px}}
+
+/* Contact */
+.contact{background:var(--fg);color:var(--bg);border-radius:20px;padding:56px clamp(24px,5vw,64px);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end}
+.contact h2{font-size:clamp(30px,4vw,48px);line-height:1.05}
+.contact p{opacity:.7;margin-top:14px}
+.contact .mono{color:inherit;opacity:.6}
+.clist{display:grid;gap:10px}
+.crow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid color-mix(in srgb,var(--bg) 22%,transparent);text-decoration:none;font-size:15.5px;min-width:0}
+.crow span:first-child{overflow-wrap:anywhere}
+.copy{font:500 12.5px var(--mono);text-transform:uppercase;letter-spacing:.05em;background:transparent;color:inherit;border:1px solid color-mix(in srgb,var(--bg) 35%,transparent);border-radius:999px;padding:6px 10px;cursor:pointer;flex:none}
+@media (max-width:860px){.contact{grid-template-columns:1fr}}
+footer{padding-block:32px 48px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* Case study */
+.case-top{padding-block:40px 0}
+.back{display:inline-flex;gap:8px;text-decoration:none;color:var(--muted);font-size:14.5px}
+.back:hover{color:var(--fg)}
+.case-top h1{font-size:clamp(40px,6vw,76px);line-height:1;margin-top:20px}
+.case-top .subtitle{font-size:clamp(18px,2vw,22px);color:var(--muted);max-width:52ch;margin-top:20px;line-height:1.45}
+.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin-top:40px;padding-block:24px;border-block:1px solid var(--line)}
+.meta dt{margin:0 0 6px}
+.meta dd{margin:0;font-size:15px}
+@media (max-width:720px){.meta{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.case-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.case-hero{margin-top:40px}
+.tldr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:40px}
+.tldr div{background:var(--surface);padding:24px}
+.tldr p{margin-top:10px;font-size:15.5px}
+@media (max-width:720px){.tldr{grid-template-columns:1fr}}
+.case-body{display:grid;grid-template-columns:200px minmax(0,1fr);gap:64px;padding-block:64px 32px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 96px);align-self:start;display:grid;gap:2px}
+.toc a{text-decoration:none;color:var(--muted);font-size:14.5px;padding:6px 0 6px 14px;border-left:2px solid var(--line);transition:color .15s,border-color .15s}
+.toc a:hover{color:var(--fg)}
+.toc a.on{color:var(--fg);border-left-color:var(--accent)}
+.toc .mono{margin-bottom:10px}
+@media (max-width:900px){.case-body{grid-template-columns:1fr;gap:0}.toc{display:none}}
+.chapter{max-width:720px;scroll-margin-top:96px}
+.chapter + .chapter{margin-top:72px}
+.chapter h2{font-size:30px;margin-top:10px}
+.chapter .prose{margin-top:18px;display:grid;gap:16px;font-size:17px;color:color-mix(in srgb,var(--fg) 86%,var(--muted))}
+.chapter .q{font-family:var(--display);font-size:24px;line-height:1.35;color:var(--fg);padding-left:20px;border-left:2px solid var(--accent)}
+.chapter figure.ph{margin-top:8px}
+figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
+.steps{display:grid;gap:0;margin-top:8px;border-top:1px solid var(--line)}
+.steps div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.steps b{font-weight:600;display:block}
+.steps span{color:var(--muted);font-size:15.5px}
+@media (max-width:560px){.steps div{grid-template-columns:1fr;gap:4px}}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:8px}
+.cards div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+.cards b{display:block;font-family:var(--display);font-weight:500;font-size:19px}
+.cards span{display:block;color:var(--muted);font-size:15px;margin-top:8px}
+.next{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:24px;text-decoration:none;padding:40px 0;border-top:1px solid var(--line);margin-top:48px}
+.next h3{font-size:clamp(28px,4vw,44px);margin-top:8px}
+.next .go{font-family:var(--mono);font-size:24px;color:var(--accent);transition:transform .2s}
+.next:hover .go{transform:translateX(6px)}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" data-home>Zhihan Liu</a>
+    <ul>
+      <li><a class="keep" href="#work" data-home>Work</a></li>
+      <li><a href="#about" data-home>About</a></li>
+      <li><a href="#contact" data-home>Contact</a></li>
+      <li><a class="cta" href="#resume" id="navResume">Resume</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="home" class="wrap">
+  <section class="hero" id="top">
+    <div>
+      <p class="mono">Product Designer · New York</p>
+      <h1>I design consumer products people <em>come back to</em>.</h1>
+      <p class="lede">I'm Zhihan (Dee) Liu. I bring a game designer's toolkit to product work: core loops, progression, and social systems, grounded in user research. I prototype my own ideas in code so teams can test them early. <strong>Currently Product Designer at TraderBear.</strong></p>
+      <div class="quick">
+        <a class="btn primary" href="#work">View work <span class="arr">↓</span></a>
+        <a class="btn" href="#resume" data-resume>Resume <span class="arr">↗</span></a>
+        <a class="btn" href="https://www.linkedin.com/in/zhihan-liu-1856b22ba/" target="_blank" rel="noopener">LinkedIn <span class="arr">↗</span></a>
+      </div>
+    </div>
+    <dl class="facts">
+      <div><dt class="mono">Now</dt><dd>Product Designer, TraderBear</dd></div>
+      <div><dt class="mono">Focus</dt><dd>Engagement, community, gamified UX</dd></div>
+      <div><dt class="mono">Education</dt><dd>MFA Design &amp; Technology, Parsons</dd></div>
+      <div><dt class="mono">Before</dt><dd>Lead narrative designer on a shipped mobile RPG</dd></div>
+    </dl>
+  </section>
+
+  <section class="sec" id="work">
+    <div class="sec-head">
+      <h2>Selected work</h2>
+      <span class="mono" id="workCount"></span>
+    </div>
+    <div id="features"></div>
+    <div class="sub-head">
+      <h3>Design exercises</h3>
+      <span class="mono">Take-home challenges</span>
+    </div>
+    <div class="minis" id="minis"></div>
+  </section>
+
+  <section class="sec" id="more">
+    <div class="sec-head">
+      <h2>More links</h2>
+      <span class="mono">Side projects and full archive</span>
+    </div>
+    <div class="links">
+      <a class="lrow" href="https://didiisliuzhihan.github.io/hazy-time-diary/" target="_blank" rel="noopener">
+        <span class="n">Hazy Time Diary</span><span class="d">One-click journaling web app that replaces a multi-tool vlog workflow</span><span class="y">Web app</span><span class="go">↗</span>
+      </a>
+      <a class="lrow" href="#more">
+        <span class="n">Crystal of Citizens</span><span class="d">Co-founded blind-box brand. Designed and shipped the Shopify store <span class="tbd">add link</span></span><span class="y">E-commerce</span><span class="go">↗</span>
+      </a>
+      <a class="lrow" href="https://zhihanliu.art" target="_blank" rel="noopener">
+        <span class="n">Games &amp; installations</span><span class="d">Narrative games, tabletop, and physical-digital work at zhihanliu.art</span><span class="y">Archive</span><span class="go">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="sec" id="about">
+    <div class="sec-head">
+      <h2>About</h2>
+      <span class="mono">Background</span>
+    </div>
+    <div class="about">
+      <div>
+        <p class="big">I started in film and game narrative, shipped a commercial mobile RPG, then spent my MFA building physical-digital experiences. Product design is where those threads meet.</p>
+        <div class="principles">
+          <div><i></i><p><b>Design the loop, not just the screen.</b> <span>I map what brings someone back tomorrow before I draw a single flow.</span></p></div>
+          <div><i></i><p><b>Test with real people early.</b> <span>Beta cohorts, live observation, and short surveys shape my priorities more than my own taste.</span></p></div>
+          <div><i></i><p><b>Prototype in the real medium.</b> <span>I build working prototypes with AI-assisted code, so feedback comes from something people can actually use.</span></p></div>
+        </div>
+      </div>
+      <div class="xp">
+        <div><span class="r">Product Designer</span><span class="o">TraderBear · Awesome Bears</span><span class="t">2026 – Now</span></div>
+        <div><span class="r">UI/UX Designer &amp; Content Creator</span><span class="o">Seven Sense, freelance</span><span class="t">2024 – Now</span></div>
+        <div><span class="r">Co-founder &amp; Chief Designer</span><span class="o">Crystal of Citizens</span><span class="t">2023 – 2025</span></div>
+        <div><span class="r">Lead Narrative Designer</span><span class="o">Rakshasa Street, Sohu.com</span><span class="t"><span class="tbd">years</span></span></div>
+        <div><span class="r">MFA Design &amp; Technology</span><span class="o">Parsons School of Design</span><span class="t">2026</span></div>
+        <div><span class="r">BFA</span><span class="o">Beijing Film Academy</span><span class="t"><span class="tbd">year</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="contact">
+    <div class="contact">
+      <div>
+        <p class="mono">Contact</p>
+        <h2>Open to product design roles in New York and remote.</h2>
+        <p>The fastest way to reach me is email.</p>
+      </div>
+      <div class="clist">
+        <div class="crow"><span id="email">your.email@example.com</span><button class="copy" type="button" id="copyEmail">Copy</button></div>
+        <a class="crow" href="https://www.linkedin.com/in/zhihan-liu-1856b22ba/" target="_blank" rel="noopener"><span>LinkedIn</span><span>↗</span></a>
+        <a class="crow" href="#resume" data-resume><span>Resume (PDF)</span><span>↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="mono">© 2026 Zhihan Liu</span>
+    <a class="mono" href="#top" style="text-decoration:none">Back to top ↑</a>
+  </footer>
+</main>
+
+<main id="case" class="wrap" hidden></main>
+
+<script>
+/* ---------- Content ----------
+   [[text]] renders as a highlighted placeholder to replace later.
+   img: {label, ratio, src?}  add src (file path or data URI) to swap a placeholder for a real image. */
+const RESUME_URL = ""; // e.g. "resume.pdf" once uploaded
+
+const CASES = [
+{
+  id:"traderbear", kind:"feature", tint:"--t1",
+  eyebrow:"Fintech · Mobile app", year:"2026",
+  title:"TraderBear",
+  summary:"Designing a gamified community that makes trading feel approachable for people who have never traded.",
+  subtitle:"Designing a gamified, AI-powered community that helps people who have never traded understand it, try it, and come back.",
+  chips:["Gamification","Community","AI features","Localization"],
+  meta:[["Role","Product Designer"],["Team","CEO, co-founder, marketing lead"],["Timeline","2026 – Present"],["Platform","Mobile app"]],
+  links:[["Product site",""],["Figma",""]],
+  hero:{label:"Hero: key app screens", ratio:"16/9"},
+  tldr:[["Problem","Trading feels risky and full of jargon, so most beginners never start or quit after the first loss."],["What I did","Built a gamification framework, designed AI-powered community mechanics, and led localization design for the mobile app."],["Outcome","[[In progress. Add a launch milestone, test result, or metric]]"]],
+  sections:[
+    {id:"context",h:"Context",blocks:[
+      {p:"TraderBear is an early-stage fintech product from Awesome Bears, an AI app studio. The goal is to bring mainstream, non-expert users into trading through play and community instead of charts and jargon."},
+      {p:"I report directly to the CEO, co-founder, and marketing lead, so design decisions sit close to product strategy and growth."}
+    ]},
+    {id:"problem",h:"Problem",blocks:[
+      {q:"How might we help a first-time user understand a trading concept well enough to act on it, and want to return tomorrow?"},
+      {p:"[[Add 2 to 3 specific user pain points from research or the product audit.]]"}
+    ]},
+    {id:"process",h:"Process",blocks:[
+      {steps:[["Product audit","Reviewed the existing product and onboarding to find where new users drop off."],["Competitor research","Mapped how fintech and learning apps use streaks, levels, and social proof. [[Name 3 to 5 competitors]]"],["Gamification framework","Drafted a framework linking learning goals to game mechanics and community rewards."],["Build plan","Worked with the team on the technical route, asset and staffing needs, and mobile adaptation."],["Localization","Led localization design so layouts, copy length, and cultural cues hold up across markets."]]},
+      {img:{label:"Gamification framework diagram",ratio:"16/10"},cap:"[[Caption: how the framework connects concepts, mechanics, and rewards]]"}
+    ]},
+    {id:"solution",h:"Solution",blocks:[
+      {p:"[[Describe the 2 to 3 core features you designed and the decision behind each.]]"},
+      {img:{label:"Core loop: community feed and challenge screens",ratio:"16/10"}},
+      {img:{label:"Localization: before and after",ratio:"16/9"}}
+    ]},
+    {id:"outcome",h:"Outcome",blocks:[{p:"[[Add impact: shipped features, test results, engagement numbers, or team adoption.]]"}]},
+    {id:"reflection",h:"Reflection",blocks:[{p:"[[One or two lessons. For example, a trade-off between fun and financial responsibility.]]"}]}
+  ]
+},
+{
+  id:"bad-children-shop", kind:"feature", tint:"--t2",
+  eyebrow:"Community · Web app", year:"2026",
+  title:"Bad Children Shop",
+  summary:"A gamified community web app that links a physical gashapon machine to digital identities. Tested with 30+ beta users.",
+  subtitle:"A gamified community web app that connects a physical gashapon machine to digital identities, redesigned after testing with 30+ beta users.",
+  chips:["User research","Beta testing","Social design","Prototyping"],
+  meta:[["Role","Product Designer, end to end"],["Partner","Community operations team, entertainment company"],["Timeline","2026 · Ongoing"],["Platform","Web, desktop and mobile"]],
+  links:[["Live prototype",""],["Figma",""]],
+  hero:{label:"Hero: gashapon pull screen and avatar",ratio:"16/9"},
+  tldr:[["Problem","A gashapon pull is fun once. The community team needed a reason for members to keep coming back between events."],["What I did","Designed the product end to end, ran beta tests with 30+ users, and redesigned the social layer from what I learned."],["Outcome","Passed internal beta. Three new features designed around the strongest signal: acquaintance-based social play."]],
+  sections:[
+    {id:"context",h:"Context",blocks:[
+      {p:"Bad Children Shop extends the Bad Children Paradise character world into a community tool. I designed it with the community operations team of an entertainment company, who wanted to manage and engage their member community."},
+      {p:"The product combines a physical capsule-toy machine with digital avatar identities and a home-building progression mode. I built the prototype myself with React, Three.js, Supabase, and an AI-assisted workflow."},
+      {img:{label:"System overview: physical machine, app, and community",ratio:"16/9"}}
+    ]},
+    {id:"research",h:"Research",blocks:[
+      {p:"I recruited a beta cohort of 30+ users and tested in two ways, so I could compare what people say with what they do."},
+      {cards:[["Remote, self-guided","Users explored on their own, then answered a follow-up questionnaire."],["In person, observed","I watched users live and noted where they hesitated or got stuck."]]}
+    ]},
+    {id:"insights",h:"Insights",blocks:[
+      {cards:[["Depth was invisible","Users fixated on the core pull screen and missed most deeper features."],["Social was the hook","The strongest positive feedback was about the acquaintance-based social layer and the community atmosphere."]]},
+      {q:"Instead of adding menus to surface depth, bring depth back into the core loop, and build it around people users already know."}
+    ]},
+    {id:"solution",h:"Solution",blocks:[
+      {cards:[["The Nest","A home space where collected figures interact over time and create small story moments, delivered as postcards that go back into the user's own pool."],["Drift Pool","A shared public machine filled with postcards that users design with stickers and stamps, for others to pull."],["Airdrop","A planned in-person exchange for trading figures and cards, with tasks that unlock deeper content."]]},
+      {img:{label:"The Nest: home space screens",ratio:"16/10"}},
+      {img:{label:"Drift Pool: postcard creation and pull flow",ratio:"16/10"}}
+    ]},
+    {id:"outcome",h:"Outcome",blocks:[{p:"The product passed internal beta with the partner team. The redesigned features are in development. [[Add any numbers: retention, return visits, survey scores, or quotes.]]"}]},
+    {id:"reflection",h:"Reflection",blocks:[{p:"Observed sessions changed my priorities more than the survey did. Users rarely describe what they never found, so watching them was the only way to see the gap. [[Edit in your own words]]"}]}
+  ]
+},
+{
+  id:"seven-sense", kind:"feature", tint:"--t3",
+  eyebrow:"Operations + guest app", year:"2024 – Now",
+  title:"Seven Sense",
+  summary:"One app for two audiences: the staff who run an immersive mystery theater, and the guests who play in it.",
+  subtitle:"Designing one product for two audiences: the staff who run an immersive mystery theater in Manhattan, and the guests who play in it.",
+  chips:["B2B2C","Internal tools","Service design","UI/UX"],
+  meta:[["Role","UI/UX and feature designer"],["Client","Seven Sense, Manhattan"],["Timeline","[[dates]]"],["Platform","[[mobile / web]]"]],
+  links:[["Figma",""]],
+  hero:{label:"Hero: staff view and guest view side by side",ratio:"16/9"},
+  tldr:[["Problem","[[What was slow or broken for staff and guests before the app?]]"],["What I did","Designed UI, UX, and feature functionality for both the staff-facing and guest-facing sides of the app."],["Outcome","[[Add result: in use, adopted by staff, time saved, guest feedback]]"]],
+  sections:[
+    {id:"context",h:"Context",blocks:[
+      {p:"Seven Sense runs immersive mystery theater in Manhattan. I have freelanced there since October 2024, first on social content, which gave me close knowledge of how a show night actually runs."},
+      {p:"That access shaped the product work: I could observe staff and guests directly instead of guessing."}
+    ]},
+    {id:"users",h:"Two audiences",blocks:[
+      {cards:[["Staff","Need speed and clarity under show-night pressure. [[Add their key tasks]]"],["Guests","Need to stay immersed without friction. [[Add their key tasks]]"]]}
+    ]},
+    {id:"process",h:"Process",blocks:[
+      {p:"[[Describe research, flows, and how you balanced the two audiences.]]"},
+      {img:{label:"Service blueprint or user flow",ratio:"16/9"}}
+    ]},
+    {id:"solution",h:"Solution",blocks:[
+      {img:{label:"Staff-facing screens",ratio:"16/10"}},
+      {img:{label:"Guest-facing screens",ratio:"16/10"}},
+      {p:"[[Explain 2 to 3 key design decisions.]]"}
+    ]},
+    {id:"outcome",h:"Outcome",blocks:[{p:"[[Add impact and next steps.]]"}]}
+  ]
+},
+{
+  id:"flex", kind:"mini", tint:"--t4",
+  eyebrow:"Design exercise · Web", year:"[[year]]",
+  title:"Flex Website Build",
+  summary:"Take-home challenge: designed the site in Figma and built it end to end.",
+  subtitle:"A take-home challenge: designing a website in Figma and building it end to end. [[Edit with the actual brief]]",
+  chips:["Figma","Web build","Visual design"],
+  meta:[["Role","Designer and builder"],["Type","Take-home exercise"],["Timeline","[[e.g. 5 days]]"],["Tools","Figma, [[build tool]]"]],
+  links:[["Live site",""],["Figma file",""]],
+  hero:{label:"Hero: homepage, desktop and mobile",ratio:"16/9"},
+  tldr:[["Brief","[[One sentence on what the company asked for]]"],["What I did","[[Research, design in Figma, build]]"],["Result","[[Live site, next interview round, or feedback]]"]],
+  sections:[
+    {id:"brief",h:"Brief",blocks:[{p:"[[Paste or summarize the prompt, constraints, and time limit.]]"}]},
+    {id:"approach",h:"Approach",blocks:[{p:"[[How you scoped the work and what you prioritized.]]"},{img:{label:"Sitemap or wireframes",ratio:"16/10"}}]},
+    {id:"design",h:"Design in Figma",blocks:[{img:{label:"Figma: key frames and components",ratio:"16/10"}},{p:"[[Type, color, and layout decisions.]]"}]},
+    {id:"build",h:"Build",blocks:[{img:{label:"Live site screenshots",ratio:"16/10"}},{p:"[[How you built it and what changed from the Figma design.]]"}]},
+    {id:"next",h:"What I'd do next",blocks:[{p:"[[With more time, what would you test or improve?]]"}]}
+  ]
+},
+{
+  id:"b2b", kind:"mini", tint:"--t5",
+  eyebrow:"Design exercise · B2B", year:"[[year]]",
+  title:"B2B Product Optimization",
+  summary:"Take-home challenge: turned a client's requirements into a clearer B2B workflow.",
+  subtitle:"A take-home challenge: turning a client's requirements into a clearer, faster B2B workflow. [[Edit with the actual brief]]",
+  chips:["B2B","UX audit","Workflow redesign"],
+  meta:[["Role","Product Designer"],["Type","Take-home exercise"],["Timeline","[[e.g. 1 week]]"],["Tools","Figma"]],
+  links:[["Prototype",""],["Figma file",""]],
+  hero:{label:"Hero: redesigned dashboard or key screen",ratio:"16/9"},
+  tldr:[["Brief","[[The client's request in one sentence]]"],["What I did","[[Audit, prioritize, redesign]]"],["Result","[[Outcome or reviewer feedback]]"]],
+  sections:[
+    {id:"brief",h:"Client needs",blocks:[{p:"[[Who the client is, who uses the product, and what they asked for.]]"}]},
+    {id:"audit",h:"Audit",blocks:[{p:"[[Problems you found in the current product, ranked by impact.]]"},{img:{label:"Annotated audit of the current product",ratio:"16/10"}}]},
+    {id:"redesign",h:"Redesign",blocks:[{img:{label:"Before and after",ratio:"16/9"}},{p:"[[Key decisions and how each one maps to a client need.]]"}]},
+    {id:"tradeoffs",h:"Trade-offs",blocks:[{p:"[[What you chose not to do, and why.]]"}]}
+  ]
+}
+];
+
+/* ---------- Rendering ---------- */
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const fmt=s=>esc(s).replace(/\[\[(.+?)\]\]/g,'<span class="tbd">$1</span>');
+const ph=(img,tint)=>`<figure class="ph" style="aspect-ratio:${img.ratio};${tint?`--tint:var(${tint})`:""}">${img.src?`<img src="${esc(img.src)}" alt="${esc(img.label)}" loading="lazy">`:`<div class="lbl"><b>Image · ${esc(img.ratio.replace("/",":"))}</b><span>${esc(img.label)}</span></div>`}</figure>`;
+const chips=c=>`<div class="chips">${c.map(x=>`<span class="chip">${esc(x)}</span>`).join("")}</div>`;
+
+function renderHome(){
+  const feats=CASES.filter(c=>c.kind==="feature"), minis=CASES.filter(c=>c.kind==="mini");
+  document.getElementById("workCount").textContent=`${feats.length} case studies · ${minis.length} exercises`;
+  document.getElementById("features").innerHTML=feats.map(c=>`
+    <a class="feature" href="#${c.id}">
+      ${ph(c.hero,c.tint)}
+      <div>
+        <p class="mono">${fmt(c.eyebrow)} · ${fmt(c.year)}</p>
+        <h3>${fmt(c.title)}</h3>
+        <p class="sum">${fmt(c.summary)}</p>
+        ${chips(c.chips)}
+        <span class="read">Read case study <span>→</span></span>
+      </div>
+    </a>`).join("");
+  document.getElementById("minis").innerHTML=minis.map(c=>`
+    <a class="mini" href="#${c.id}">
+      ${ph({label:c.hero.label,ratio:"16/10",src:c.hero.src},c.tint)}
+      <div class="body">
+        <p class="mono">${fmt(c.eyebrow)}</p>
+        <h4>${fmt(c.title)}</h4>
+        <p>${fmt(c.summary)}</p>
+        <span class="read">View exercise <span>→</span></span>
+      </div>
+    </a>`).join("");
+}
+
+function block(b){
+  if(b.p) return `<p>${fmt(b.p)}</p>`;
+  if(b.q) return `<p class="q">${fmt(b.q)}</p>`;
+  if(b.img) return `<div>${ph(b.img)}${b.cap?`<figcaption>${fmt(b.cap)}</figcaption>`:""}</div>`;
+  if(b.steps) return `<div class="steps">${b.steps.map(s=>`<div><b>${fmt(s[0])}</b><span>${fmt(s[1])}</span></div>`).join("")}</div>`;
+  if(b.cards) return `<div class="cards">${b.cards.map(s=>`<div><b>${fmt(s[0])}</b><span>${fmt(s[1])}</span></div>`).join("")}</div>`;
+  return "";
+}
+
+function renderCase(c){
+  const i=CASES.indexOf(c), nx=CASES[(i+1)%CASES.length];
+  const links=c.links.map(([t,u])=>u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} <span class="arr">↗</span></a>`:`<span class="btn pending" title="Link coming soon">${esc(t)} · link coming</span>`).join("");
+  document.getElementById("case").innerHTML=`
+    <section class="case-top">
+      <a class="back" href="#work">← All work</a>
+      <p class="mono" style="margin-top:28px">${fmt(c.eyebrow)} · ${fmt(c.year)}</p>
+      <h1>${fmt(c.title)}</h1>
+      <p class="subtitle">${fmt(c.subtitle)}</p>
+      <dl class="meta">${c.meta.map(([k,v])=>`<div><dt class="mono">${esc(k)}</dt><dd>${fmt(v)}</dd></div>`).join("")}</dl>
+      <div class="case-links">${links}</div>
+      <div class="case-hero">${ph(c.hero,c.tint)}</div>
+      <div class="tldr">${c.tldr.map(([k,v])=>`<div><p class="mono">${esc(k)}</p><p>${fmt(v)}</p></div>`).join("")}</div>
+    </section>
+    <div class="case-body">
+      <nav class="toc" aria-label="Sections"><p class="mono">On this page</p>${c.sections.map(s=>`<a href="#${c.id}" data-target="s-${s.id}">${esc(s.h)}</a>`).join("")}</nav>
+      <div>
+        ${c.sections.map(s=>`<section class="chapter" id="s-${s.id}"><p class="mono">${esc(s.h)}</p><h2>${esc(s.h)}</h2><div class="prose">${s.blocks.map(block).join("")}</div></section>`).join("")}
+        <a class="next" href="#${nx.id}"><div><p class="mono">Next project</p><h3>${fmt(nx.title)}</h3></div><span class="go">→</span></a>
+      </div>
+    </div>`;
+  // TOC: scroll without changing the hash
+  document.querySelectorAll(".toc a").forEach(a=>a.addEventListener("click",e=>{
+    e.preventDefault(); document.getElementById(a.dataset.target)?.scrollIntoView({behavior:"smooth"});
+  }));
+  // section headers: hide the duplicate eyebrow (keeps markup uniform)
+  document.querySelectorAll(".chapter > .mono").forEach(m=>m.remove());
+  spy();
+}
+
+let io;
+function spy(){
+  io?.disconnect();
+  const links=[...document.querySelectorAll(".toc a")];
+  io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ links.forEach(l=>l.classList.toggle("on",l.dataset.target===e.target.id)); } });
+  },{rootMargin:"-30% 0px -60% 0px"});
+  document.querySelectorAll(".chapter").forEach(s=>io.observe(s));
+}
+
+function route(){
+  const h=decodeURIComponent(location.hash.slice(1));
+  const c=CASES.find(x=>x.id===h);
+  const home=document.getElementById("home"), cs=document.getElementById("case");
+  if(c){
+    renderCase(c); home.hidden=true; cs.hidden=false;
+    document.title=`${c.title} · Zhihan Liu`;
+    window.scrollTo(0,0);
+  }else{
+    const wasCase=!cs.hidden;
+    cs.hidden=true; home.hidden=false; document.title="Zhihan Liu Portfolio";
+    if(h==="resume"){ return; }
+    const el=h?document.getElementById(h):null;
+    if(el){ requestAnimationFrame(()=>el.scrollIntoView({behavior:wasCase?"auto":"smooth"})); }
+    else if(wasCase){ window.scrollTo(0,0); }
+  }
+}
+
+// Resume links
+function wireResume(){
+  document.querySelectorAll('[data-resume], #navResume').forEach(a=>{
+    if(RESUME_URL){ a.href=RESUME_URL; a.target="_blank"; a.rel="noopener"; }
+    else { a.addEventListener("click",e=>{ e.preventDefault(); a.setAttribute("title","Resume PDF coming soon"); }); }
+  });
+}
+
+// Copy email
+document.getElementById("copyEmail").addEventListener("click",async e=>{
+  const t=document.getElementById("email").textContent.trim(), b=e.currentTarget;
+  try{ await navigator.clipboard.writeText(t); b.textContent="Copied"; }
+  catch{ const r=document.createRange(); r.selectNodeContents(document.getElementById("email")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent="Selected"; }
+  setTimeout(()=>b.textContent="Copy",1600);
+});
+
+// Nav border on scroll
+const nav=document.getElementById("nav");
+addEventListener("scroll",()=>nav.classList.toggle("scrolled",scrollY>8),{passive:true});
+
+renderHome(); wireResume(); route();
+addEventListener("hashchange",route);
+</script>
+</body>
+</html>
