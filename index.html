@@ -91,7 +91,7 @@ p{margin:0}
 
 /* Work: cards hung on a sagging line. Each hanger pivots at its clip; the card flips to a holographic back. */
 .rail-hint{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:-12px}
-.rail{position:relative;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;--cw:clamp(184px,16.5vw,208px)}
+.rail{position:relative;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;--cw:clamp(178px,15.5vw,196px)}
 .rail-inner{position:relative;min-width:100%}
 .wire{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
 .wire path{fill:none;stroke:var(--wire);stroke-width:1.5}
@@ -105,13 +105,14 @@ p{margin:0}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:22px 12px 14px;display:flex;flex-direction:column;gap:9px;border:1px solid var(--line);overflow:hidden;box-shadow:0 22px 34px -22px var(--shadow)}
 .face::before{content:"";position:absolute;top:8px;left:50%;width:30px;height:6px;transform:translateX(-50%);border-radius:3px;background:var(--bg);border:1px solid var(--line)}
 .front{background:var(--surface)}
-.ctop{display:flex;justify-content:space-between;gap:8px}
-.ctop .mono{font-size:10.5px}
+.ctop{display:flex;justify-content:space-between;gap:8px;min-width:0}
+.ctop .mono{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctop .mono:last-child{flex:none}
 .cimg .ph{border-radius:9px}
 .cimg .ph .lbl{gap:2px;padding:8px}
 .cimg .ph .lbl b{font-size:10px}
 .cimg .ph .lbl span{font-size:12px;line-height:1.35}
-.cname{font-family:var(--display);font-weight:500;font-size:19px;line-height:1.1;letter-spacing:-.01em;margin-top:2px}
+.cname{font-family:var(--display);font-weight:500;font-size:18px;line-height:1.1;letter-spacing:-.01em;margin-top:2px}
 .crole{font-size:12.5px;color:var(--muted);margin-top:-4px}
 .back{transform:rotateY(180deg);color:var(--holo-ink);border-color:transparent;
   background:linear-gradient(calc(125deg + var(--tilt) * 3deg),var(--h1),var(--h2) 28%,var(--h3) 52%,var(--h4) 76%,var(--h1));
@@ -341,7 +342,7 @@ const RESUME_URL = ""; // e.g. "resume.pdf" once uploaded
 
 const CASES = [
 {
-  id:"traderbear", kind:"feature", tint:"--t1",
+  id:"traderbear", tag:"Fintech", short:"2026", kind:"feature", tint:"--t1",
   eyebrow:"Fintech · Mobile app", year:"2026",
   title:"TraderBear",
   summary:"Designing a gamified community that makes trading feel approachable for people who have never traded.",
@@ -374,7 +375,7 @@ const CASES = [
   ]
 },
 {
-  id:"bad-children-shop", kind:"feature", tint:"--t2",
+  id:"bad-children-shop", tag:"Community", short:"2026", kind:"feature", tint:"--t2",
   eyebrow:"Community · Web app", year:"2026",
   title:"Bad Children Shop",
   summary:"A gamified community web app that links a physical gashapon machine to digital identities. Tested with 30+ beta users.",
@@ -408,7 +409,7 @@ const CASES = [
   ]
 },
 {
-  id:"seven-sense", kind:"feature", tint:"--t3",
+  id:"seven-sense", tag:"Ops + guest app", short:"2024–", kind:"feature", tint:"--t3",
   eyebrow:"Operations + guest app", year:"2024 – Now",
   title:"Seven Sense",
   summary:"One app for two audiences: the staff who run an immersive mystery theater, and the guests who play in it.",
@@ -439,7 +440,7 @@ const CASES = [
   ]
 },
 {
-  id:"flex", kind:"mini", tint:"--t4",
+  id:"flex", tag:"Exercise · Web", short:"Take-home", kind:"mini", tint:"--t4",
   eyebrow:"Design exercise · Web", year:"[[year]]",
   title:"Flex Website Build",
   summary:"Take-home challenge: designed the site in Figma and built it end to end.",
@@ -458,7 +459,7 @@ const CASES = [
   ]
 },
 {
-  id:"b2b", kind:"mini", tint:"--t5",
+  id:"b2b", tag:"Exercise · B2B", short:"Take-home", kind:"mini", tint:"--t5",
   eyebrow:"Design exercise · B2B", year:"[[year]]",
   title:"B2B Product Optimization",
   summary:"Take-home challenge: turned a client's requirements into a clearer B2B workflow.",
@@ -502,8 +503,8 @@ function renderHome(){
       <span class="clip"></span><span class="string"></span>
       <a class="card3d" href="#${c.id}" aria-label="${esc(c.title)}: ${isCase?"read case study":"view exercise"}">
         <div class="face front">
-          <div class="ctop"><span class="mono">${fmt(c.eyebrow.split(" · ")[0])}</span><span class="mono">${fmt(c.year)}</span></div>
-          <div class="cimg">${ph({label:c.hero.label,ratio:"1/1",src:c.hero.src},c.tint)}</div>
+          <div class="ctop"><span class="mono">${esc(c.tag)}</span><span class="mono">${esc(c.short)}</span></div>
+          <div class="cimg">${ph({label:c.hero.label,ratio:"5/4",src:c.hero.src},c.tint)}</div>
           <div class="cname">${fmt(c.title)}</div>
           <div class="crole">${fmt(c.meta[0][1])}</div>
         </div>
@@ -545,8 +546,8 @@ function renderHome(){
 
 function layoutRail(){
   const rail=document.getElementById("rail"), inner=document.getElementById("railInner"), svg=document.getElementById("wire");
-  const n=hangers.length, cw=hangers[0].el.offsetWidth, gap=28;
-  const W=Math.max(rail.clientWidth, n*cw+(n-1)*gap+48);
+  const n=hangers.length, cw=hangers[0].el.offsetWidth, gap=24;
+  const W=Math.max(rail.clientWidth, n*cw+(n-1)*gap+40);
   const y0=26, sag=30, pad=(W-(n*cw+(n-1)*gap))/2;
   const cardH=cw*288/200;
   let maxBottom=0;
