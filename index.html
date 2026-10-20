@@ -41,6 +41,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important;animation:none!important}}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -234,6 +235,12 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .device .fallback{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted);font-size:14px;z-index:0}
 .device iframe{position:relative;z-index:1}
 .embed .note{font-size:13.5px;color:var(--muted)}
+.embed .note a{color:var(--accent)}
+.device .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.device.desk .vp{aspect-ratio:1280/630}
+.go-live{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;display:inline-flex;gap:8px;align-items:center;font:600 14px var(--body);padding:12px 18px;border-radius:999px;border:0;cursor:pointer;background:var(--accent);color:#fff;box-shadow:0 10px 24px -8px var(--shadow);white-space:nowrap}
+.go-live span{font-size:11px}
+.go-live:hover{filter:brightness(1.08)}
 .next{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:24px;text-decoration:none;padding:40px 0;border-top:1px solid var(--line);margin-top:48px}
 .next h3{font-size:clamp(28px,4vw,44px);margin-top:8px}
 .next .go{font-family:var(--mono);font-size:24px;color:var(--accent);transition:transform .2s}
@@ -363,8 +370,8 @@ const CASES = [
   chips:["Gamification","Community","AI features","Localization"],
   meta:[["Role","Product Designer"],["Team","CEO, co-founder, marketing lead"],["Timeline","2026 – Present"],["Platform","Mobile app"]],
   links:[["Open My Bear in a new tab","https://trader-bear.com/my-bear"],["Figma",""]],
-  embed:{url:"https://trader-bear.com/my-bear", label:"My Bear onboarding"},
-  hero:{label:"Hero: key app screens", ratio:"16/9"},
+  embed:{url:"https://trader-bear.com/my-bear", label:"TraderBear", mobile:"img/tb-mobile-chat.jpg", desktop:"img/tb-desktop-chat.jpg"},
+  hero:{label:"TraderBear: the bear at its trading desk", ratio:"16/9", src:"img/tb-cover.jpg"},
   tldr:[["Problem","Trading feels risky and full of jargon, so most beginners never start or quit after the first loss."],["What I did","Built a gamification framework, designed AI-powered community mechanics, and led localization design for the mobile app."],["Outcome","[[In progress. Add a launch milestone, test result, or metric]]"]],
   sections:[
     {id:"context",h:"Context",blocks:[
@@ -380,8 +387,12 @@ const CASES = [
       {img:{label:"Gamification framework diagram",ratio:"16/10"},cap:"[[Caption: how the framework connects concepts, mechanics, and rewards]]"}
     ]},
     {id:"solution",h:"Solution",blocks:[
-      {p:"[[Describe the 2 to 3 core features you designed and the decision behind each.]]"},
-      {img:{label:"Core loop: community feed and challenge screens",ratio:"16/10"}},
+      {p:"The product gives every user a bear: an AI trading companion that explains, practices, and competes alongside them. Three surfaces carry the loop."},
+      {cards:[["Chat","Ask in plain language. The bear finds markets, explains prices, and runs backtests, in English or Chinese."],["Arena","A ranked forecasting game with Elo tiers and a ladder. No money and no orders, so beginners can compete safely."],["My Bear","The bear levels up from Analyst Intern as you chat and paper trade, and learns a persona, lessons, and skills."]]},
+      {img:{label:"Chat: the bear answers trading questions in plain language",ratio:"1920/945",src:"img/tb-desktop-chat.jpg"},cap:"Chat. Paper mode starts every user with a $10,000 practice balance, so questions can turn into trades without real risk."},
+      {img:{label:"Arena: ranked forecasting matches",ratio:"1920/945",src:"img/tb-arena.jpg"},cap:"Arena. Elo and tiers borrow from chess and ranked games, and the page states clearly that rank is not investment performance."},
+      {img:{label:"My Bear: progression and persona",ratio:"1920/945",src:"img/tb-mybear.jpg"},cap:"My Bear. Each level asks for XP, conversations, and paper trades, so progression rewards learning, not risk taking."},
+      {p:"[[Add which of these you designed and one decision behind each. For example, why progression counts conversations and paper trades instead of profit.]]"},
       {img:{label:"Localization: before and after",ratio:"16/9"}}
     ]},
     {id:"outcome",h:"Outcome",blocks:[{p:"TraderBear is live with real customers. [[Add impact: shipped features, test results, or engagement numbers.]]"}]},
@@ -625,9 +636,9 @@ function block(b){
 
 function embedHTML(c){
   const host=c.embed.url.replace(/^https?:\/\//,"");
-  return `<section class="embed" style="--tint:var(${c.tint})" aria-label="Live product">
+  return `<section class="embed" style="--tint:var(${c.tint})" aria-label="Product preview">
     <div class="embed-bar">
-      <span class="mono">Live product · ${esc(c.embed.label)}</span>
+      <span class="mono">${esc(c.embed.label)} · <span id="embedState">Screens</span></span>
       <div class="seg" role="group" aria-label="Preview size">
         <button type="button" data-mode="phone" aria-pressed="true">Mobile</button>
         <button type="button" data-mode="desk" aria-pressed="false">Desktop</button>
@@ -636,20 +647,30 @@ function embedHTML(c){
     <div class="stage"><div class="device phone" id="device">
       <div class="chrome" hidden><i></i><i></i><i></i><span>${esc(host)}</span></div>
       <div class="vp" id="vp">
-        <div class="fallback">The live preview could not load here.<br>Use “Open My Bear in a new tab” above.</div>
-        <iframe id="liveFrame" src="${esc(c.embed.url)}" title="${esc(c.title)} live product" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <img class="poster" id="poster" src="${esc(c.embed.mobile)}" alt="${esc(c.title)} app screen">
+        <button type="button" class="go-live" id="goLive">Try the live product <span>▶</span></button>
+        <iframe id="liveFrame" title="${esc(c.title)} live product" hidden></iframe>
       </div>
     </div></div>
-    <p class="note">This is the real product, not a screenshot. Scroll and tap inside the frame.</p>
+    <p class="note" id="embedNote">Screens from the shipped product. Press “Try the live product” to use the real site inside this frame.</p>
   </section>`;
 }
-function wireEmbed(){
+function wireEmbed(c){
   const dev=document.getElementById("device"); if(!dev) return;
-  const vp=document.getElementById("vp"), fr=document.getElementById("liveFrame"), chrome=dev.querySelector(".chrome");
+  const vp=document.getElementById("vp"), fr=document.getElementById("liveFrame"), poster=document.getElementById("poster"),
+        go=document.getElementById("goLive"), chrome=dev.querySelector(".chrome");
+  const W=1280, H=630; let live=false;
   const size=()=>{
-    if(dev.classList.contains("phone")){ fr.style.width="100%"; fr.style.height="100%"; fr.style.transform="none"; vp.style.height=""; }
-    else{ const W=1280,H=800,s=Math.min(1,vp.clientWidth/W); fr.style.width=W+"px"; fr.style.height=H+"px"; fr.style.transform=`scale(${s})`; vp.style.height=(H*s)+"px"; }
+    const phone=dev.classList.contains("phone");
+    poster.src=phone?c.embed.mobile:c.embed.desktop;
+    if(phone){ fr.style.width="100%"; fr.style.height="100%"; fr.style.transform="none"; vp.style.height=""; }
+    else{ const s=Math.min(1,vp.clientWidth/W); fr.style.width=W+"px"; fr.style.height=H+"px"; fr.style.transform=`scale(${s})`; vp.style.height=(H*s)+"px"; }
   };
+  go.addEventListener("click",()=>{
+    live=true; fr.src=c.embed.url; fr.hidden=false; poster.hidden=true; go.hidden=true;
+    document.getElementById("embedState").textContent="Live";
+    document.getElementById("embedNote").innerHTML=`This is the real product. If it stays blank, <a href="${esc(c.embed.url)}" target="_blank" rel="noopener">open it in a new tab</a>.`;
+  });
   document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===b));
     dev.className="device "+b.dataset.mode; chrome.hidden=b.dataset.mode!=="desk"; size();
@@ -684,7 +705,7 @@ function renderCase(c){
   }));
   // section headers: hide the duplicate eyebrow (keeps markup uniform)
   document.querySelectorAll(".chapter > .mono").forEach(m=>m.remove());
-  wireEmbed();
+  if(c.embed) wireEmbed(c);
   spy();
 }
 
