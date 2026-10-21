@@ -263,6 +263,23 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .proto{scroll-margin-top:90px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#060608}
 .proto iframe{display:block;width:100%;border:0;background:#060608}
 .immersive{margin-top:40px}
+/* Phone gallery: swipe through real app screens */
+.pg{margin-top:40px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(24px,5vw,64px);align-items:center;padding:clamp(24px,4vw,48px);border-radius:20px;background:radial-gradient(120% 90% at 20% 0%,#16303a,#0b1116 70%);color:#e8f4f6;outline:none}
+.pg:focus-visible{box-shadow:0 0 0 3px var(--accent)}
+.pg-phone{width:min(300px,72vw);aspect-ratio:1206/2622;border:10px solid #05080b;border-radius:40px;overflow:hidden;background:#000;box-shadow:0 0 0 1px #2a3a42,0 40px 70px -30px rgba(0,0,0,.9);touch-action:pan-y;cursor:grab;user-select:none}
+.pg-track{display:flex;height:100%;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.pg-track img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;object-position:top;display:block;-webkit-user-drag:none}
+.pg-side{min-width:0;display:grid;gap:12px;max-width:440px}
+.pg .mono{color:#5fd3e0}
+.pg-t{font-family:var(--display);font-weight:500;font-size:clamp(26px,3vw,36px);margin:0;color:#fff}
+.pg-d{font-size:16px;line-height:1.55;color:#b9cdd3;min-height:5em}
+.pg-nav{display:flex;gap:12px}
+.pg .dex-btn{background:#1b2a31;color:#e8f4f6;box-shadow:none;border:1px solid #2c4650}
+.pg-dots{display:flex;gap:8px;flex-wrap:wrap}
+.pg-dots button{width:8px;height:8px;border-radius:999px;border:0;padding:0;background:#33505a;cursor:pointer;transition:width .25s,background .25s}
+.pg-dots button[aria-current="true"]{width:24px;background:#5fd3e0}
+.pg-hint{font-size:12.5px;color:#7f969d}
+@media (max-width:720px){.pg{grid-template-columns:1fr;justify-items:center;text-align:center}.pg-side{justify-items:center}.pg-d{min-height:0}}
 .zoomable{cursor:zoom-in}
 .ph:has(.zoomable)::after{content:"⤢ Click to enlarge";position:absolute;right:10px;bottom:10px;font:500 11.5px var(--body);color:#fff;background:rgba(20,24,32,.62);padding:5px 9px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none}
 .ph:hover::after{opacity:1}
@@ -624,36 +641,52 @@ const CASES = [
   ]
 },
 {
-  id:"seven-sense", tag:"Ops + guest app", short:"2024–", kind:"feature", tint:"--t3",
-  eyebrow:"Operations + guest app", year:"2024 – Now",
+  id:"seven-sense", tag:"WeChat mini program", short:"2024–", kind:"feature", tint:"--t3",
+  eyebrow:"Immersive theater · WeChat mini program", year:"2024 – Now",
   title:"Seven Sense",
-  summary:"One app for two audiences: the staff who run an immersive mystery theater, and the guests who play in it.",
-  subtitle:"Designing one product for two audiences: the staff who run an immersive mystery theater in Manhattan, and the guests who play in it.",
-  chips:["B2B2C","Internal tools","Service design","UI/UX"],
-  meta:[["Role","Product Designer, freelance"],["Client","Seven Sense, Manhattan"],["Timeline","Oct 2024 – Present"],["Platform","[[mobile / web]]"]],
-  links:[["Figma",""]],
-  hero:{label:"Hero: staff view and guest view side by side",ratio:"16/9"},
-  tldr:[["Problem","[[What was slow or broken for staff and guests before the app?]]"],["What I did","Designed UI and features for both the staff and guest sides, built the design system and UI components, and wrote Figma handoff specs with engineering."],["Outcome","[[Add result: in use, adopted by staff, time saved, guest feedback]]"]],
+  summary:"A WeChat mini program for an immersive mystery theater in New York: one app for players booking and collecting, and for the staff who run the shows.",
+  subtitle:"A WeChat mini program for New York's Chinese-speaking immersive theater community. Players book sessions, collect ticket stubs, and earn badges, while staff run schedules, settlements, and memberships in the same app.",
+  chips:["WeChat mini program","Two audiences","Design system","Art direction"],
+  meta:[["Role","Product Designer and art development"],["Client","Seven Sense, Manhattan"],["Timeline","Oct 2024 – Present"],["Platform","WeChat mini program, iOS and Android"]],
+  links:[],
+  hero:{label:"Seven Sense mini program",ratio:"1000/800",src:"img/ss-cover.jpg"},
+  card:"img/ss-cover.jpg",
+  phones:{label:"Swipe through the mini program",screens:[
+    {src:"img/ss-home.jpg",t:"Home",d:"Brand hero, booking contact, new scripts, and a store switcher between the Downtown and Midtown locations."},
+    {src:"img/ss-promo.jpg",t:"Event launch",d:"Seasonal events open as a full-screen poster on launch, so a limited Halloween night sells out through the app."},
+    {src:"img/ss-calendar.jpg",t:"Availability calendar",d:"Colour-coded days show open, filling, and full sessions per store and room, then lead into the hosts players can book."},
+    {src:"img/ss-scripts.jpg",t:"Script library",d:"472 scripts with new arrivals, search by title, genre, or author, and filters for players choosing their next game."},
+    {src:"img/ss-journey.jpg",t:"My journey",d:"A personal calendar of every session played, each saved as a digital ticket stub."},
+    {src:"img/ss-badges.jpg",t:"Achievements",d:"Badges for first game, stub collecting, and genre journeys, plus hidden ones, to bring players back."},
+    {src:"img/ss-staff.jpg",t:"Me: player and staff",d:"Members see their balance and records. Hosts switch into staff tools: sessions, settlements, unpaid bills, profiles, and member sign-up."}
+  ]},
+  tldr:[["Problem","Booking, membership, and staff operations lived in chat threads and spreadsheets. Players had no record of the games they loved."],["What I did","Led art development and product design with the tech team: information architecture, UI, a design system, and a branded ticket stub component."],["Result","A live mini program used by players and staff, with seasonal events, a 472-script library, and collectible stubs and badges."]],
   sections:[
     {id:"context",h:"Context",blocks:[
-      {p:"Seven Sense runs immersive mystery theater in Manhattan. I have freelanced there since October 2024, first on social content, which gave me close knowledge of how a show night actually runs."},
-      {p:"That access shaped the product work: I could observe staff and guests directly instead of guessing."},
-      {p:"I work with the development team in an agile workflow, discussing design intent, technical constraints, and implementation trade-offs across staff and guest flows."}
+      {p:"Seven Sense runs immersive mystery theater in Manhattan for a largely Chinese-speaking community in New York. Since October 2024 I have worked with the team as product designer and art developer, alongside a separate engineering team."},
+      {p:"We built on WeChat because that is where this audience already books, chats, and pays. The mini program opens inside WeChat, with no download and no new account."}
     ]},
-    {id:"users",h:"Two audiences",blocks:[
-      {cards:[["Staff","Need speed and clarity under show-night pressure. [[Add their key tasks]]"],["Guests","Need to stay immersed without friction. [[Add their key tasks]]"]]}
+    {id:"users",h:"Two audiences, one app",blocks:[
+      {cards:[["Players","Find a script, check which nights are open, book with a host, and keep a memory of every game they play."],["Staff","Customer service, developers, marketing, hosts, and directors manage schedules, sessions, settlements, memberships, and work milestones."]]},
+      {p:"Instead of two separate products, the same app changes with identity. A player's “Me” tab shows balance and records. A host's adds DM work tools, so staff manage operations where they already talk to players."}
     ]},
-    {id:"process",h:"Process",blocks:[
-      {p:"[[Describe research, flows, and how you balanced the two audiences.]]"},
-      {img:{label:"Service blueprint or user flow",ratio:"16/9"}}
+    {id:"structure",h:"Structure",blocks:[
+      {steps:[["Home","What is on now: events, new scripts, availability by store, and hosts."],["Scripts","The full library with search and genre filters."],["Achievements","Badges that reward coming back and trying new genres."],["My journey","A calendar of past games and their ticket stubs."],["Me","Membership and, for staff, the operations toolkit."]]}
     ]},
-    {id:"solution",h:"Solution",blocks:[
-      {img:{label:"Staff-facing screens",ratio:"16/10"}},
-      {img:{label:"Guest-facing screens",ratio:"16/10"}},
-      {img:{label:"Design system: UI components and Figma handoff spec",ratio:"16/10"}},
-      {p:"[[Explain 2 to 3 key design decisions.]]"}
+    {id:"ticket",h:"Ticket stub system",blocks:[
+      {h3:"A souvenir for every game"},
+      {p:"Players leave a show with a story but nothing to keep. I designed a branded digital ticket stub as a reusable component: script title and genre tags, player count, session time and venue, cover art, the character played, the player, and a stamp from the host with the supporting cast."},
+      {p:"Every field is data-driven, so the engineering team generates a stub for any script and session. Stubs collect in My journey and count toward achievements, which turns a one-off night into a growing collection."},
+      {imgs:[{src:"img/ss-ticket.jpg",label:"Seven Sense digital ticket stub component"}],ratio:"auto",narrow:true}
     ]},
-    {id:"outcome",h:"Outcome",blocks:[{p:"[[Add impact and next steps.]]"}]}
+    {id:"craft",h:"Art development",blocks:[
+      {p:"I shaped the visual language with the brand: a dark, cinematic base with cyan accents taken from the Seven Sense identity, poster-led layouts for scripts and events, and badge art for each achievement. The same tokens and components carry across the player and staff sides."},
+      {p:"I prepare Figma handoff specs and work directly with engineering on design intent, technical constraints, and trade-offs within WeChat's mini program framework."}
+    ]},
+    {id:"outcome",h:"Outcome",blocks:[
+      {p:"The mini program is live for Seven Sense's players and staff. Bookings, events, memberships, and session settlements now run through one place, and every game leaves a ticket stub behind."},
+      {p:"[[Add any usage numbers: members, monthly bookings, stubs issued, or event sales.]]"}
+    ]}
   ]
 },
 {
@@ -1000,6 +1033,38 @@ function wireZoom(root){
     img.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();open();} });
   });
 }
+function phonesHTML(c){
+  const P=c.phones, n=P.screens.length;
+  return `<section class="pg" data-pg tabindex="0" aria-roledescription="carousel" aria-label="${esc(P.label)}">
+    <div class="pg-phone"><div class="pg-track">${P.screens.map((x,i)=>`<img src="${esc(x.src)}" alt="${esc(x.t)} screen" draggable="false"${i?' loading="lazy"':''}>`).join("")}</div></div>
+    <div class="pg-side">
+      <p class="mono pg-count">01 / ${String(n).padStart(2,"0")}</p>
+      <h3 class="pg-t">${esc(P.screens[0].t)}</h3>
+      <p class="pg-d">${esc(P.screens[0].d)}</p>
+      <div class="pg-nav"><button type="button" class="dex-btn" data-d="-1" aria-label="Previous screen">←</button><button type="button" class="dex-btn" data-d="1" aria-label="Next screen">→</button></div>
+      <div class="pg-dots">${P.screens.map((x,i)=>`<button type="button" aria-label="${esc(x.t)}" data-i="${i}"></button>`).join("")}</div>
+      <p class="pg-hint">Swipe the phone or use the arrows</p>
+    </div>
+  </section>`;
+}
+function wirePhones(c){
+  const root=document.querySelector("[data-pg]"); if(!root) return;
+  const S=c.phones.screens, n=S.length, track=root.querySelector(".pg-track"), dots=[...root.querySelectorAll(".pg-dots button")];
+  let i=0, drag=null;
+  const show=k=>{ i=(k+n)%n; track.style.transition=""; track.style.transform=`translateX(${-i*100}%)`;
+    root.querySelector(".pg-count").textContent=`${String(i+1).padStart(2,"0")} / ${String(n).padStart(2,"0")}`;
+    root.querySelector(".pg-t").textContent=S[i].t; root.querySelector(".pg-d").textContent=S[i].d;
+    dots.forEach((d,j)=>d.setAttribute("aria-current",j===i)); };
+  root.querySelectorAll("[data-d]").forEach(b=>b.addEventListener("click",()=>show(i+ +b.dataset.d)));
+  dots.forEach(d=>d.addEventListener("click",()=>show(+d.dataset.i)));
+  root.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"){show(i+1);e.preventDefault();} if(e.key==="ArrowLeft"){show(i-1);e.preventDefault();} });
+  const ph=root.querySelector(".pg-phone");
+  ph.addEventListener("pointerdown",e=>{ drag={x:e.clientX,w:ph.clientWidth,dx:0,id:e.pointerId}; track.style.transition="none"; });
+  ph.addEventListener("pointermove",e=>{ if(!drag) return; drag.dx=e.clientX-drag.x; if(Math.abs(drag.dx)>6){ ph.setPointerCapture(drag.id); track.style.transform=`translateX(calc(${-i*100}% + ${drag.dx}px))`; } });
+  const end=()=>{ if(!drag) return; const d=drag.dx, w=drag.w; drag=null; if(d<-w*.18) show(i+1); else if(d>w*.18) show(i-1); else if(Math.abs(d)<6){ show(i); openLightbox(S[i].src,S[i].t); } else show(i); };
+  ph.addEventListener("pointerup",end); ph.addEventListener("pointercancel",end);
+  show(0);
+}
 function immersiveHTML(c){
   const im=c.immersive, live=!!im.url;
   return `<section class="immersive${im.device==="phone"?" phone":""}" aria-label="${esc(im.label)}">
@@ -1074,7 +1139,7 @@ function renderCase(c){
       <p class="subtitle">${fmt(c.subtitle)}</p>
       <dl class="meta">${c.meta.map(([k,v])=>`<div><dt class="mono">${esc(k)}</dt><dd>${fmt(v)}</dd></div>`).join("")}</dl>
       <div class="case-links">${links}</div>
-      ${c.embed?embedHTML(c):c.immersive?immersiveHTML(c):`<div class="case-hero">${ph(c.hero,c.tint)}</div>`}
+      ${c.embed?embedHTML(c):c.immersive?immersiveHTML(c):c.phones?phonesHTML(c):`<div class="case-hero">${ph(c.hero,c.tint)}</div>`}
       <div class="tldr">${c.tldr.map(([k,v])=>`<div><p class="mono">${esc(k)}</p><p>${fmt(v)}</p></div>`).join("")}</div>
     </section>
     <div class="case-body">
@@ -1092,6 +1157,7 @@ function renderCase(c){
   document.querySelectorAll(".chapter > .mono").forEach(m=>m.remove());
   if(c.embed) wireEmbed(c);
   if(c.immersive) wireImmersive(c);
+  if(c.phones) wirePhones(c);
   document.querySelectorAll("[data-dex]").forEach(wireDex);
   wireZoom(document.getElementById("case"));
   document.querySelectorAll(".proto.demo").forEach(box=>{
