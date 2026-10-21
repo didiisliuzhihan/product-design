@@ -213,6 +213,8 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .steps span{color:var(--muted);font-size:15.5px}
 @media (max-width:560px){.steps div{grid-template-columns:1fr;gap:4px}}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:8px}
+.cards.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:560px){.cards.c2{grid-template-columns:1fr}}
 .cards div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
 .cards b{display:block;font-family:var(--display);font-weight:500;font-size:19px}
 .cards span{display:block;color:var(--muted);font-size:15px;margin-top:8px}
@@ -389,9 +391,10 @@ const CASES = [
       {img:{label:"Gamification framework diagram",ratio:"16/10"},cap:"[[Caption: how the framework connects concepts, mechanics, and rewards]]"}
     ]},
     {id:"solution",h:"Solution",blocks:[
-      {p:"The product gives every user a bear: an AI trading companion that explains, practices, and competes alongside them. Three surfaces carry the loop."},
-      {cards:[["Chat","Ask in plain language. The bear finds markets, explains prices, and runs backtests, in English or Chinese."],["Arena","A ranked forecasting game with Elo tiers and a ladder. No money and no orders, so beginners can compete safely."],["My Bear","The bear levels up from Analyst Intern as you chat and paper trade, and learns a persona, lessons, and skills."]]},
-      {img:{label:"Chat: the bear answers trading questions in plain language",ratio:"1920/945",src:"img/tb-desktop-chat.jpg"},cap:"Chat. Paper mode starts every user with a $10,000 practice balance, so questions can turn into trades without real risk."},
+      {p:"The product gives every user a bear: an AI trading companion that explains, practices, and competes alongside them. Four surfaces carry the loop."},
+      {cards:[["Chat","Ask in plain language. The bear finds markets, explains prices, and runs backtests, in English or Chinese."],["Paper","A practice market game synced with real market data. The bear proposes trades, evaluates forecasts, and runs practice rounds with virtual money."],["Arena","A ranked forecasting game with Elo tiers and a ladder. No money and no orders, so beginners can compete safely."],["My Bear","The bear levels up from Analyst Intern as you chat and paper trade, and learns a persona, lessons, and skills."]]},
+      {img:{label:"Chat: the bear answers trading questions in plain language",ratio:"1920/945",src:"img/tb-desktop-chat.jpg"},cap:"Chat. Questions turn into actions: ask about a market, then let the bear propose a paper trade."},
+      {img:{label:"Paper: virtual trading account synced with live market data",ratio:"1920/945",src:"img/tb-paper.jpg"},cap:"Paper. A $10,000 virtual account that mirrors real market prices. Equity, P&L, Sharpe ratio, drawdown, and a day streak turn practice into a game with no real money at risk."},
       {img:{label:"Arena: ranked forecasting matches",ratio:"1920/945",src:"img/tb-arena.jpg"},cap:"Arena. Elo and tiers borrow from chess and ranked games, and the page states clearly that rank is not investment performance."},
       {img:{label:"My Bear: progression and persona",ratio:"1920/945",src:"img/tb-mybear.jpg"},cap:"My Bear. Each level asks for XP, conversations, and paper trades, so progression rewards learning, not risk taking."},
       {p:"[[Add which of these you designed and one decision behind each. For example, why progression counts conversations and paper trades instead of profit.]]"},
@@ -632,7 +635,7 @@ function block(b){
   if(b.q) return `<p class="q">${fmt(b.q)}</p>`;
   if(b.img) return `<div>${ph(b.img)}${b.cap?`<figcaption>${fmt(b.cap)}</figcaption>`:""}</div>`;
   if(b.steps) return `<div class="steps">${b.steps.map(s=>`<div><b>${fmt(s[0])}</b><span>${fmt(s[1])}</span></div>`).join("")}</div>`;
-  if(b.cards) return `<div class="cards">${b.cards.map(s=>`<div><b>${fmt(s[0])}</b><span>${fmt(s[1])}</span></div>`).join("")}</div>`;
+  if(b.cards) return `<div class="cards${b.cards.length===4?" c2":""}">${b.cards.map(s=>`<div><b>${fmt(s[0])}</b><span>${fmt(s[1])}</span></div>`).join("")}</div>`;
   return "";
 }
 
