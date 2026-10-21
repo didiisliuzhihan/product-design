@@ -258,6 +258,20 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 @media (max-width:640px){.imgs,.vids{grid-template-columns:1fr}}
 .proto{scroll-margin-top:90px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#060608}
 .proto iframe{display:block;width:100%;border:0;background:#060608}
+.immersive{margin-top:40px}
+.imm-stage{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);aspect-ratio:1440/900;max-width:100%;background:#fffdf6}
+.imm-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+.imm-stage::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,30,28,.18));pointer-events:none}
+.imm-stage.on::after{display:none}
+.imm-stage.on{aspect-ratio:auto;height:min(82vh,860px)}
+.imm-stage iframe{display:block;width:100%;height:100%;border:0}
+.imm-go{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);z-index:2;display:inline-flex;gap:10px;align-items:center;font:600 15px var(--body);padding:15px 24px;border:0;border-radius:999px;background:#284e4c;color:#fffdf6;cursor:pointer;box-shadow:0 18px 40px -14px rgba(0,0,0,.55);transition:transform .2s}
+.imm-go span{font-size:11px}
+.imm-go:hover{transform:translateX(-50%) scale(1.04)}
+.imm-soon{position:absolute;left:16px;bottom:16px;z-index:2;font:500 12px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:6px 12px;border-radius:999px}
+.imm-note{font-size:13.5px;color:var(--muted);margin-top:10px}
+.imm-note a{color:var(--accent)}
+.prose .narrow{max-width:360px;margin-inline:auto}
 .proto-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 12px;background:var(--surface);border-bottom:1px solid var(--line)}
 .proto-badge{font:500 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:5px 10px;border-radius:999px}
 .proto-v video{display:block;width:100%;aspect-ratio:1440/886;background:#060608}
@@ -579,22 +593,53 @@ const CASES = [
   ]
 },
 {
-  id:"flex", tag:"Exercise · Web", short:"Take-home", kind:"mini", tint:"--t4",
-  eyebrow:"Design exercise · Web", year:"[[year]]",
-  title:"Flex Website Build",
-  summary:"Take-home challenge: designed the site in Figma and built it end to end.",
-  subtitle:"A take-home challenge: designing a website in Figma and building it end to end. [[Edit with the actual brief]]",
-  chips:["Figma","Web build","Visual design"],
-  meta:[["Role","Designer and builder"],["Type","Take-home exercise"],["Timeline","[[e.g. 5 days]]"],["Tools","Figma, [[build tool]]"]],
-  links:[["Live site",""],["Figma file",""]],
-  hero:{label:"Hero: homepage, desktop and mobile",ratio:"16/9"},
-  tldr:[["Brief","[[One sentence on what the company asked for]]"],["What I did","[[Research, design in Figma, build]]"],["Result","[[Live site, next interview round, or feedback]]"]],
+  id:"flex", tag:"Web · Conversion", short:"2026", kind:"mini", tint:"--t4",
+  eyebrow:"Landing page · Venture launch", year:"2026",
+  title:"Flex Academy",
+  summary:"One landing page for two audiences: first-time rental owners and growing operators. Designed in Figma and built as a working website.",
+  subtitle:"A sister site to The Flex that serves two audiences at once: people starting their first short-term rental, and operators who need systems to grow.",
+  chips:["Landing page","Conversion","Motion","Figma"],
+  meta:[["Role","Product Designer, solo"],["Brief","Launch page for a new venture"],["Tools","Figma, AI-assisted web build"],["Platform","Web, desktop and mobile"]],
+  links:[["Live website","https://didiisliuzhihan.github.io/flex-academy/"],["Figma design","https://www.figma.com/design/iwDQR0PKHo8j8FlCNg2niF/flex?node-id=80-2934"],["Mobile prototype","https://www.figma.com/proto/iwDQR0PKHo8j8FlCNg2niF/flex?node-id=31-1030&starting-point-node-id=31%3A1030"],["Loom walkthrough","https://www.loom.com/share/4388e9f56ad648ba8eaa5f40f2b751f1"]],
+  hero:{label:"Flex Academy homepage",ratio:"1440/900",src:"img/flex-hero.jpg"},
+  card:"img/flex-cover.jpg",
+  immersive:{url:"https://didiisliuzhihan.github.io/flex-academy/",poster:"img/flex-hero.jpg",label:"Flex Academy homepage"},
+  tldr:[["Problem","A new venture needed a launch page that stops people in seconds, explains the offer, and converts two very different visitors: beginners and operators."],["What I did","Led with each visitor's situation, turned residents' thoughts into entry points, and tied the story to two conversion paths, in Figma and a working website."],["Result","Desktop and mobile designs, a component system, interactive prototypes, a live site, and a Loom walkthrough. Not yet tested with real users."]],
   sections:[
-    {id:"brief",h:"Brief",blocks:[{p:"[[Paste or summarize the prompt, constraints, and time limit.]]"}]},
-    {id:"approach",h:"Approach",blocks:[{p:"[[How you scoped the work and what you prioritized.]]"},{img:{label:"Sitemap or wireframes",ratio:"16/10"}}]},
-    {id:"design",h:"Design in Figma",blocks:[{img:{label:"Figma: key frames and components",ratio:"16/10"}},{p:"[[Type, color, and layout decisions.]]"}]},
-    {id:"build",h:"Build",blocks:[{img:{label:"Live site screenshots",ratio:"16/10"}},{p:"[[How you built it and what changed from the Figma design.]]"}]},
-    {id:"next",h:"What I'd do next",blocks:[{p:"[[With more time, what would you test or improve?]]"}]}
+    {id:"brief",h:"The brief",blocks:[
+      {q:"Design a world-class landing page for our new venture. Capture attention immediately, make the value clear, and turn visitors into sign-ups."},
+      {steps:[["Goal","A launch page with an immediate “wow”, full creative freedom to push the visual boundaries."],["Success","Visitors understand the value proposition within seconds and choose to join."],["Handoff","One Figma file with clearly named frames and design notes, plus a five-minute video walkthrough."],["Walkthrough","Who it is for, the structure and why, the three decisions I am proudest of, and the first thing to test after launch."],["Sharing","Everything delivered as view links, nothing to download."]]},
+      {p:"Flex Academy is a sister website to The Flex, a short-term rental operator. It serves people starting their first rental and operators who need better systems to grow. I kept The Flex's core green to connect the two brands, and gave the operator route its own peach."},
+      {p:"The page has to answer four questions, in this order:"},
+      {cards:[["Is this for me?","Two clear routes: Launch for 0–1 units, Scale for existing operators."],["Why trust it?","The founders' operating experience and real product features, with no invented results."],["What will I get?","A side-by-side programme comparison, plus FAQs that answer objections."],["What do I do next?","A free webinar, a free strategy call, or a lower-commitment checklist."]]}
+    ]},
+    {id:"decisions",h:"Key decisions",blocks:[
+      {h3:"Lead with the visitor's situation"},
+      {p:"Visitors see their own situation before any programme name. The main cards separate “I want to start” from “I’m ready to build a real company”, and each leads straight to its next step."},
+      {h3:"Make concerns clickable"},
+      {p:"The thoughts above the houses are entry points. Choosing “That’s me” opens the matching audience dialog, so a concern becomes a relevant next step. Inside the dialog, visitors can switch to the other route in one click without going home."},
+      {img:{label:"Audience dialog opened from a resident's thought",ratio:"1440/900",src:"img/flex-dialog.jpg"},cap:"A concern becomes a next step. The dialog names the operator's pains and leads to a call, with the checklist as a softer option."},
+      {h3:"Connect storytelling with action"},
+      {p:"The avenue unfolds with thoughts beside the road, then leads into the offer and registration or booking. Main actions never wait for the animation, skip controls are always there, and reduced motion is respected."},
+      {img:{label:"Sound familiar? Concerns for each audience",ratio:"1440/900",src:"img/flex-familiar.jpg"},cap:"“Sound familiar?” develops each audience's concerns, with the matching action under each column."},
+      {h3:"Build trust around visitor goals"},
+      {p:"The founders bring operating experience. Base360 examples show practical functionality without implying student success. I avoided invented testimonials and income claims."},
+      {img:{label:"Founders and the two aims",ratio:"1440/860",src:"img/flex-founders.jpg"}},
+      {img:{label:"Programme comparison: Launch and Scale",ratio:"1440/980",src:"img/flex-programmes.jpg"},cap:"The programme comparison explains what each route includes. Green and peach keep the same meaning from the first choice to the commitment step."},
+      {img:{label:"Mobile homepage",ratio:"780/1560",src:"img/flex-mobile.jpg",narrow:true},cap:"On mobile, both routes stay one tap away, with compact forms and recovery states."}
+    ]},
+    {id:"architecture",h:"Interaction architecture",blocks:[
+      {p:"Every invitation has a next step. I mapped both journeys from first choice to confirmation, plus the checklist path for people who are not ready to choose."},
+      {img:{label:"Interaction architecture in Figma",ratio:"1740/1835",src:"img/flex-figma-flow.jpg"},cap:"Launch: avenue, recognise the problem, register, confirm. Scale: avenue, recognise the problem, qualify and pick a time, confirm. Switching audience changes the route, not the promise."},
+      {img:{label:"Figma project overview",ratio:"1440/902",src:"img/flex-figma-overview.jpg"},cap:"The Figma file opens on a start-here page: prototypes, full layouts, architecture, components and states, and the design rationale."}
+    ]},
+    {id:"process",h:"Process",blocks:[
+      {steps:[["Audience and content","Defined the two audiences and the four questions the page must answer."],["Hierarchy","Ordered the page as situation, trust, offer, objections, action."],["Conversion paths","Designed registration, booking, confirmation, and recovery states."],["Web build","Built a working site with motion, forms, and both journeys."],["Simulated walkthroughs","Used AI-assisted walkthroughs as a hesitant beginner and a busy operator to challenge clarity and drop-off. These are hypotheses, not measured results."]]}
+    ]},
+    {id:"next",h:"What I'd do next",blocks:[
+      {p:"My first test after launch would ask both audiences to choose a route, and watch for hesitation, switching, and abandonment before registration or booking. With two more days, I would run usability sessions, fix the main friction, and refine the homepage motion so its pacing suits both users and The Flex brand."},
+      {p:"Forms, dates, and prices X / Y are samples. No real email or calendar booking is sent."}
+    ]}
   ]
 }
 
@@ -752,7 +797,7 @@ function frameworkHTML(){
 function block(b){
   if(b.p) return `<p>${fmt(b.p)}</p>`;
   if(b.q) return `<p class="q">${fmt(b.q)}</p>`;
-  if(b.img) return `<div>${ph(b.img)}${b.cap?`<figcaption>${fmt(b.cap)}</figcaption>`:""}</div>`;
+  if(b.img) return `<div${b.img.narrow?' class="narrow"':""}>${ph(b.img)}${b.cap?`<figcaption>${fmt(b.cap)}</figcaption>`:""}</div>`;
   if(b.framework) return `<figure class="fw-fig">${frameworkHTML()}${b.cap?`<figcaption>${fmt(b.cap)}</figcaption>`:""}</figure>`;
   if(b.h3) return `<h3 class="sub">${fmt(b.h3)}</h3>`;
   if(b.imgs) return `<div class="imgs">${b.imgs.map(i=>`<figure><img src="${esc(i.src)}" alt="${esc(i.label)}" loading="lazy"><figcaption>${fmt(i.label)}</figcaption></figure>`).join("")}</div>`;
@@ -775,6 +820,24 @@ function block(b){
   return "";
 }
 
+function immersiveHTML(c){
+  const im=c.immersive, live=!!im.url;
+  return `<section class="immersive" aria-label="${esc(im.label)}">
+    <div class="imm-stage" id="immStage">
+      <img src="${esc(im.poster)}" alt="${esc(im.label)}">
+      ${live?`<button type="button" class="imm-go" id="immGo">Enter the live homepage <span>▶</span></button>`:`<span class="imm-soon">Live site deploying</span>`}
+    </div>
+    ${live?`<p class="imm-note">The real homepage with its opening animation. Hover the houses, open a resident's thought, and scroll inside the frame, or <a href="${esc(im.url)}" target="_blank" rel="noopener">open it full screen ↗</a>.</p>`:""}
+  </section>`;
+}
+function wireImmersive(c){
+  const go=document.getElementById("immGo"); if(!go) return;
+  go.addEventListener("click",()=>{
+    const st=document.getElementById("immStage");
+    st.classList.add("on");
+    st.innerHTML=`<iframe src="${esc(c.immersive.url)}" title="${esc(c.immersive.label)}" allow="autoplay; fullscreen"></iframe>`;
+  });
+}
 function embedHTML(c){
   const host=c.embed.url.replace(/^https?:\/\//,"");
   return `<section class="embed" style="--tint:var(${c.tint})" aria-label="Product preview">
@@ -830,7 +893,7 @@ function renderCase(c){
       <p class="subtitle">${fmt(c.subtitle)}</p>
       <dl class="meta">${c.meta.map(([k,v])=>`<div><dt class="mono">${esc(k)}</dt><dd>${fmt(v)}</dd></div>`).join("")}</dl>
       <div class="case-links">${links}</div>
-      ${c.embed?embedHTML(c):`<div class="case-hero">${ph(c.hero,c.tint)}</div>`}
+      ${c.embed?embedHTML(c):c.immersive?immersiveHTML(c):`<div class="case-hero">${ph(c.hero,c.tint)}</div>`}
       <div class="tldr">${c.tldr.map(([k,v])=>`<div><p class="mono">${esc(k)}</p><p>${fmt(v)}</p></div>`).join("")}</div>
     </section>
     <div class="case-body">
@@ -847,6 +910,7 @@ function renderCase(c){
   // section headers: hide the duplicate eyebrow (keeps markup uniform)
   document.querySelectorAll(".chapter > .mono").forEach(m=>m.remove());
   if(c.embed) wireEmbed(c);
+  if(c.immersive) wireImmersive(c);
   document.querySelectorAll(".proto.demo").forEach(box=>{
     const v=box.querySelector("video"), fr=box.querySelector("iframe");
     box.querySelectorAll("[data-view]").forEach(btn=>btn.addEventListener("click",()=>{
