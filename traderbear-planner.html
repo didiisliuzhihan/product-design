@@ -367,10 +367,10 @@ function addXP(n,el){
 function startDay(){
   if(running) return; running=true; simMin=START; $("now").hidden=false; $("start").disabled=true;
   tasks.forEach(t=>{ if(t.status==="done"&&t.start!==null) return; });
-  log("Day started."); last=performance.now(); raf=requestAnimationFrame(step);
+  log("Day started."); last=performance.now(); clearInterval(raf); raf=setInterval(step,50); step();
 }
-function step(ts){
-  const dt=Math.min(100,ts-last); last=ts;
+function step(){
+  const ts=performance.now(), dt=Math.max(0,Math.min(120,ts-last)); last=ts;
   simMin+=dt/1000*25*speed;                         // 25 sim minutes per second at 1×
   const hp=hourPx(); $("now").style.top=((simMin-START)/60*hp)+"px"; $("nowTxt").textContent=fmt(Math.floor(simMin));
   let active=null;
@@ -385,16 +385,15 @@ function step(ts){
   if(!active) $("status").textContent=tasks.some(t=>t.start!==null&&t.start>simMin)?"Short break before the next task.":"Napping at the desk.";
   const left=tasks.some(t=>t.start!==null&&t.status!=="done");
   if(simMin>=END||!left){ endDay(); return; }
-  raf=requestAnimationFrame(step);
 }
 function endDay(){
-  running=false; cancelAnimationFrame(raf); setState("rest");
+  running=false; clearInterval(raf); setState("rest");
   const n=tasks.filter(t=>t.status==="done").length;
   $("status").textContent=`Day complete: ${n} task${n===1?"":"s"} done, +${dayXP} XP. The bear is resting.`;
   say("Good day. Plan tomorrow when you're ready."); log("Day complete."); layoutLane();
 }
 function reset(){
-  cancelAnimationFrame(raf); running=false; simMin=START; dayXP=0; $("now").hidden=true;
+  clearInterval(raf); running=false; simMin=START; dayXP=0; $("now").hidden=true;
   tasks.forEach(t=>t.el.remove()); tasks=[]; $("log").innerHTML="";
   $("xpTxt").textContent="0 / 200"; $("xpBar").style.width="0";
   seed(); setState("rest"); $("status").textContent="Napping at the desk. Plan the day, then press Start day.";
