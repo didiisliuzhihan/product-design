@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bear Day Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap">
+<style>
+/* Prototype for the TraderBear case study: calendar-first "Today" page.
+   Layout: bear stage (left) + day planner (right, primary). Chat shrinks to a command bar under the planner.
+   Single dark theme on purpose: it mirrors TraderBear's product UI. */
+:root{
+  --bg:#060608; --panel:#111116; --panel-2:#16141f; --line:#24222e; --line-2:#2f2b3d;
+  --fg:#f3f2f7; --muted:#8d8b99; --dim:#5d5b69;
+  --accent:#7b5cff; --accent-2:#45d6c4; --ok:#5fe0a6;
+  --ui:"Manrope", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --serif:"Fraunces", Georgia, serif;
+  --hour:64px; --deckw:200px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--ui);-webkit-font-smoothing:antialiased}
+body{min-height:100vh;padding-bottom:env(safe-area-inset-bottom,0px)}
+button{font:inherit;color:inherit}
+button:focus-visible,.tcard:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* top tabs, as in the product */
+.tabs{display:flex;gap:4px;align-items:flex-end;height:46px;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid #15141b;overflow-x:auto;scrollbar-width:none}
+.tabs span{position:relative;padding:0 18px 12px;font-weight:600;font-size:14.5px;color:#9a99a6;white-space:nowrap}
+.tabs span.on{color:#fff}
+.tabs span.on::after{content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2px;border-radius:2px;background:var(--accent)}
+.tabs .new{font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--accent-2);margin-left:6px;vertical-align:2px}
+
+.app{display:grid;grid-template-columns:minmax(250px,0.85fr) minmax(0,1.5fr);gap:18px;padding:18px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));max-width:1440px;margin:0 auto}
+@media (max-width:1000px){:root{--deckw:168px;--hour:54px}}
+@media (max-width:760px){.app{grid-template-columns:1fr}}
+
+/* bear stage */
+.stage{background:#000;border:1px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.meta{display:flex;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex-wrap:wrap}
+.meta b{color:#fff;font-weight:700;letter-spacing:0;font-size:13.5px;text-transform:none;margin-left:6px}
+.video{position:relative;aspect-ratio:5/4;width:100%;max-width:100%;border-radius:14px;overflow:hidden;background:#000}
+.video video,.video img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .6s ease}
+.video .off{opacity:0}
+.bubble{position:absolute;left:50%;top:10px;transform:translateX(-50%);max-width:86%;padding:9px 14px;border-radius:14px;background:rgba(123,92,255,.92);color:#fff;font-size:13px;font-weight:600;line-height:1.35;text-align:center;box-shadow:0 10px 30px -10px rgba(123,92,255,.7);transition:opacity .3s,transform .3s}
+.bubble.hide{opacity:0;transform:translate(-50%,-6px)}
+.fsm{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fsm .lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.state{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;border:1px solid var(--line-2);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--dim);transition:all .3s}
+.state i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.state.on{color:#fff;border-color:var(--accent);background:rgba(123,92,255,.18);box-shadow:0 0 0 3px rgba(123,92,255,.12)}
+.state.on.work{border-color:var(--accent-2);background:rgba(69,214,196,.14);box-shadow:0 0 0 3px rgba(69,214,196,.1)}
+.arrow{color:var(--dim);font-size:13px}
+.status{font-size:14px;color:#cfcdd9;min-height:20px}
+.xp{display:grid;gap:7px}
+.xp .row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.xp .row b{color:#fff;font-weight:700}
+.bar{height:6px;border-radius:6px;background:#1d1b26;overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.log{display:grid;gap:6px;max-height:130px;overflow:auto;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.log div{display:flex;gap:8px}
+.log time{color:var(--dim);font-variant-numeric:tabular-nums;flex:none;width:66px;white-space:nowrap}
+
+/* planner */
+.planner{background:linear-gradient(180deg,var(--panel-2),var(--panel) 40%);border:1px solid var(--line);border-radius:20px;display:flex;flex-direction:column;min-width:0}
+.ph{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:18px 20px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.ph h1{font-family:var(--serif);font-weight:600;font-size:clamp(26px,3vw,34px);margin:4px 0 0;letter-spacing:-.01em}
+.ph p{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line-2);background:#17151f;border-radius:12px;padding:10px 14px;font-weight:700;font-size:13.5px;cursor:pointer;transition:transform .15s,background .2s,border-color .2s}
+.btn:hover{border-color:#4a4560}
+.btn:active{transform:scale(.97)}
+.btn.go{background:var(--accent);border-color:var(--accent);color:#fff;padding-inline:18px;box-shadow:0 10px 26px -12px rgba(123,92,255,.9)}
+.btn.go:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.sm{padding:8px 11px;font-size:12.5px}
+.speed[aria-pressed="true"]{border-color:var(--accent-2);color:var(--accent-2)}
+
+.board{display:grid;grid-template-columns:var(--deckw) minmax(0,1fr);gap:16px;padding:16px 20px 18px;min-width:0}
+@media (max-width:640px){.board{grid-template-columns:1fr}}
+.deck-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.deck{position:relative;min-height:120px;transition:height .45s cubic-bezier(.2,.9,.25,1.15)}
+.deck .empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:12.5px;color:var(--dim);border:1px dashed var(--line-2);border-radius:14px;padding:12px}
+@media (max-width:640px){.deck{min-height:0}}
+
+/* timeline */
+.tl-wrap{position:relative;min-width:0}
+.tl-h{display:flex;justify-content:space-between;margin-bottom:10px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tl{position:relative;height:calc(var(--hour) * 9);border-radius:14px;background:#0c0b10;border:1px solid var(--line)}
+.hr{position:absolute;left:0;right:0;height:var(--hour);border-top:1px solid #1c1a24;display:flex}
+.hr:first-child{border-top:0}
+.hr span{width:58px;padding:6px 0 0 10px;font-size:11.5px;color:var(--dim);font-variant-numeric:tabular-nums}
+.hr::after{content:"";position:absolute;left:58px;right:0;top:50%;border-top:1px dashed #17161e}
+.lane{position:absolute;left:62px;right:8px;top:0;bottom:0}
+.ghost{position:absolute;left:0;right:0;border-radius:12px;border:1.5px dashed rgba(255,255,255,.35);background:rgba(255,255,255,.04);pointer-events:none;transition:top .12s ease,height .12s ease}
+.ghost.bad{border-color:rgba(255,107,139,.6)}
+.now{position:absolute;left:58px;right:0;height:0;border-top:2px solid #ff5d7a;z-index:5;pointer-events:none}
+.now::before{content:"";position:absolute;left:-5px;top:-6px;width:10px;height:10px;border-radius:50%;background:#ff5d7a}
+.now b{position:absolute;right:6px;top:-22px;font-size:11px;font-weight:800;color:#ff8aa0;font-variant-numeric:tabular-nums}
+
+/* task cards: glossy swatches */
+.tcard{--c:#7b5cff;--ink:#120f1d;position:absolute;left:0;width:100%;border-radius:12px;padding:8px 11px;color:var(--ink);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--c) 92%,#fff) 0%,var(--c) 55%,color-mix(in srgb,var(--c) 88%,#000) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 18px -10px color-mix(in srgb,var(--c) 70%,#000),0 1px 0 rgba(0,0,0,.25);
+  display:flex;flex-direction:column;justify-content:center;gap:2px;overflow:hidden;
+  transition:transform .5s cubic-bezier(.2,.9,.25,1.15),top .45s cubic-bezier(.2,.9,.25,1.1),height .3s ease,opacity .3s,filter .3s;will-change:transform}
+.tcard .t1{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;opacity:.75;white-space:nowrap}
+.tcard .t1 svg{width:13px;height:13px;flex:none}
+.tcard .t2{font-size:13px;font-weight:800;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tcard .xpb{position:absolute;right:9px;top:7px;font-size:10.5px;font-weight:800;opacity:.7}
+.tcard.short{flex-direction:row;align-items:center;justify-content:flex-start;gap:8px;padding-block:0}
+.tcard.short .t1 span{display:none}
+.tcard .prog{position:absolute;left:0;bottom:0;height:3px;width:0;background:rgba(0,0,0,.35)}
+.tcard.running{filter:saturate(1.15) brightness(1.06);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 0 0 2px rgba(255,255,255,.75),0 12px 26px -10px var(--c)}
+.tcard.done{filter:saturate(.35) brightness(.7)}
+.tcard.done .t2::before{content:"✓ ";}
+.tcard.dragging{position:fixed;z-index:50;cursor:grabbing;transition:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 26px 40px -16px rgba(0,0,0,.9)}
+.tcard .when{position:absolute;inset:0;display:grid;place-items:center;font-size:17px;font-weight:800;color:var(--ink);background:color-mix(in srgb,var(--c) 55%,transparent);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;transition:opacity .15s}
+.tcard.dragging.over .when{opacity:1}
+.c-purple{--c:#a77bff}.c-blue{--c:#6b97ff}.c-green{--c:#4ccb91}.c-yellow{--c:#e7e35e}.c-orange{--c:#ffa24d}.c-pink{--c:#ff7895}
+
+.float{position:fixed;z-index:60;font-weight:800;font-size:14px;color:var(--ok);pointer-events:none;animation:up 1.2s ease-out forwards}
+@keyframes up{to{transform:translateY(-36px);opacity:0}}
+
+/* chat, demoted to a command bar */
+.chat{border-top:1px solid var(--line);padding:12px 20px 16px;display:grid;gap:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line-2);background:#15131c;border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:600;color:#d6d4e0;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.cmd{display:flex;gap:10px;align-items:center;background:#121118;border:1px solid var(--line-2);border-radius:14px;padding:6px 6px 6px 14px}
+.cmd input{flex:1;min-width:0;background:transparent;border:0;color:var(--fg);font:inherit;font-size:14px;outline:none;padding:8px 0}
+.cmd input::placeholder{color:var(--dim)}
+.reply{font-size:13px;color:#cfcdd9;min-height:18px}
+.reply b{color:var(--accent-2)}
+.foot{max-width:1440px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 28px;font-size:12px;color:var(--dim)}
+</style>
+</head>
+<body>
+<nav class="tabs" aria-label="TraderBear sections (prototype)">
+  <span class="on">Today<span class="new">NEW</span></span><span>Chat</span><span>Arena</span><span>Paper</span><span>Live</span><span>My Bear</span>
+</nav>
+
+<main class="app">
+  <section class="stage" aria-label="Your bear">
+    <div class="meta"><span>Analyst Intern <b>Lv 1</b></span><span>Paper balance <b>$10,000.00</b></span></div>
+    <div class="video">
+      <img src="media/bear-rest.jpg" alt="Polar bear napping at a trading desk" id="poster">
+      <video id="vRest" src="media/bear-rest.mp4" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
+      <video id="vWork" class="off" src="media/bear-working.mp4" muted loop playsinline preload="auto" aria-hidden="true"></video>
+      <div class="bubble hide" id="bubble"></div>
+    </div>
+    <div class="fsm" aria-label="Animation state machine">
+      <span class="lbl">State</span>
+      <span class="state on" id="sRest"><i></i>REST</span><span class="arrow">⇄</span><span class="state" id="sWork"><i></i>WORKING</span>
+    </div>
+    <p class="status" id="status">Napping at the desk. Plan the day, then press Start day.</p>
+    <div class="xp">
+      <div class="row"><span>Today's XP</span><b id="xpTxt">0 / 200</b></div>
+      <div class="bar"><i id="xpBar"></i></div>
+    </div>
+    <div class="log" id="log" aria-live="polite"></div>
+  </section>
+
+  <section class="planner" aria-label="Day planner">
+    <header class="ph">
+      <div>
+        <div class="eyebrow">Your bear's workday</div>
+        <h1>Plan the day</h1>
+        <p>Drag tasks onto the timeline. Press Start day and the bear works through them on its own.</p>
+      </div>
+      <div class="ctrl">
+        <button class="btn sm speed" id="speed" type="button" aria-pressed="false" title="Run the day faster">4× speed</button>
+        <button class="btn sm" id="reset" type="button">Reset</button>
+        <button class="btn go" id="start" type="button">Start day ▶</button>
+      </div>
+    </header>
+
+    <div class="board">
+      <div>
+        <div class="deck-h"><span>Task deck</span><span id="deckCount"></span></div>
+        <div class="deck" id="deck"><div class="empty" id="deckEmpty" hidden>Deck is empty. Ask the bear below to add tasks.</div></div>
+      </div>
+      <div class="tl-wrap">
+        <div class="tl-h"><span id="dayLbl">Tue, Oct 20</span><span>9 AM – 6 PM · market hours</span></div>
+        <div class="tl" id="tl">
+          <div class="lane" id="lane"><div class="ghost" id="ghost" hidden></div></div>
+          <div class="now" id="now" hidden><b id="nowTxt"></b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat" aria-label="Ask the bear">
+      <div class="chips">
+        <button class="chip" type="button" data-add="scan">Find a hot market</button>
+        <button class="chip" type="button" data-add="backtest">Backtest an idea</button>
+        <button class="chip" type="button" data-add="learn">Teach me one concept</button>
+        <button class="chip" type="button" data-add="match">Play a ranked match</button>
+      </div>
+      <form class="cmd" id="cmd">
+        <input id="cmdIn" autocomplete="off" placeholder="Ask the bear or add a task (/ for commands)">
+        <button class="btn sm go" type="submit">Add</button>
+      </form>
+      <div class="reply" id="reply">Chat stays one line. Answers become tasks on the plan.</div>
+    </div>
+  </section>
+</main>
+<p class="foot">Interactive prototype by Zhihan Liu for the TraderBear case study. Not connected to real accounts or markets.</p>
+
+<script>
+const ICON={
+  arena:'<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1l2 4.3 4.7.6-3.4 3.2.9 4.7L8 11.5 3.8 13.8l.9-4.7L1.3 5.9 6 5.3z"/></svg>',
+  paper:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12l4-4 3 3 5-6"/></svg>',
+  learn:'<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2L1 5.5 8 9l7-3.5zM3.5 7.5v3C5 12 11 12 12.5 10.5v-3L8 10z"/></svg>',
+  mybear:'<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="4" cy="4" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="8" cy="9" r="5"/></svg>',
+  scan:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>'
+};
+const TEMPL={
+  scan:{title:"Scan hot prediction markets",cat:"Arena",icon:"scan",mins:60,xp:40,color:"purple",say:"Found 3 hot markets. Polymarket has the most volume today."},
+  learn:{title:"Explain: what 62¢ YES means",cat:"Learn",icon:"learn",mins:30,xp:20,color:"blue",say:"62¢ YES means the market sees a 62% chance. I wrote it as a flashcard."},
+  backtest:{title:"Backtest SPY 50/200 crossover",cat:"Paper",icon:"paper",mins:90,xp:60,color:"green",say:"Backtest done: 5 years, 4 crossovers. Results are in Paper."},
+  match:{title:"Ranked forecast match",cat:"Arena",icon:"arena",mins:60,xp:50,color:"orange",say:"Match settled. Our Brier score beat the opponent. +12 Elo."},
+  review:{title:"Review paper positions",cat:"Paper",icon:"paper",mins:30,xp:20,color:"yellow",say:"No open positions to worry about. Cash is ready."},
+  lesson:{title:"Write today's lesson",cat:"My Bear",icon:"mybear",mins:30,xp:30,color:"pink",say:"Lesson saved: wait for volume before trusting a price."}
+};
+const START=9*60, END=18*60, STEP=30;
+const $=id=>document.getElementById(id);
+const deck=$("deck"), lane=$("lane"), tl=$("tl"), ghost=$("ghost");
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let tasks=[], uid=0, running=false, simMin=START, speed=1, raf=0, dayXP=0, last=0;
+
+const fmt=m=>{const h=Math.floor(m/60),mm=m%60,ap=h>=12?"PM":"AM",h12=((h+11)%12)+1;return `${h12}:${String(mm).padStart(2,"0")} ${ap}`;};
+const hourPx=()=>parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--hour"));
+
+function makeTask(key,at=null){
+  const t={...TEMPL[key],key,id:++uid,start:at,status:"todo"};
+  const el=document.createElement("div");
+  el.className=`tcard c-${t.color}`; el.tabIndex=0; el.setAttribute("role","button");
+  el.setAttribute("aria-label",`${t.title}, ${t.mins} minutes. Drag to schedule.`);
+  el.innerHTML=`<div class="t1">${ICON[t.icon]}<span>${t.cat} · ${t.mins>=60?(t.mins/60)+"h":t.mins+"m"}</span></div><div class="t2">${t.title}</div><span class="xpb">+${t.xp}</span><span class="prog"></span><span class="when"></span>`;
+  t.el=el; tasks.push(t); bindDrag(t); return t;
+}
+
+/* ---- layout ---- */
+function layoutDeck(){
+  const inDeck=tasks.filter(t=>t.start===null);
+  const h=64, gap=10;
+  inDeck.forEach((t,i)=>{
+    if(t.el.parentNode!==deck) deck.appendChild(t.el);
+    t.el.classList.remove("short");
+    t.el.style.height=h+"px";
+    t.el.style.top=(i*(h+gap))+"px";
+    t.el.style.transform=`rotate(${(i%2?1:-1)*(0.6+((t.id*37)%10)/10)}deg)`;
+  });
+  deck.style.height=Math.max(120,inDeck.length*(h+gap))+"px";
+  $("deckEmpty").hidden=inDeck.length>0;
+  $("deckCount").textContent=inDeck.length?inDeck.length+" left":"";
+}
+function layoutLane(){
+  const hp=hourPx();
+  tasks.filter(t=>t.start!==null).forEach(t=>{
+    if(t.el.parentNode!==lane) lane.appendChild(t.el);
+    const top=(t.start-START)/60*hp, h=t.mins/60*hp-4;
+    t.el.style.top=(top+2)+"px"; t.el.style.height=h+"px"; t.el.style.transform="none";
+    t.el.classList.toggle("short",t.mins<60);
+  });
+  $("start").disabled=running||!tasks.some(t=>t.start!==null&&t.status!=="done");
+}
+function layout(){ layoutDeck(); layoutLane(); }
+
+/* ---- scheduling ---- */
+const overlaps=(s,m,ignore)=>tasks.some(o=>o!==ignore&&o.start!==null&&s<o.start+o.mins&&o.start<s+m);
+function freeSlot(s,m,ignore){
+  if(s>=START&&s+m<=END&&!overlaps(s,m,ignore)) return s;
+  for(let d=STEP;d<=END-START;d+=STEP){
+    for(const c of [s+d,s-d]) if(c>=START&&c+m<=END&&!overlaps(c,m,ignore)) return c;
+  }
+  return null;
+}
+function slotFromY(clientY,m){
+  const r=lane.getBoundingClientRect(), hp=hourPx();
+  let s=START+Math.round(((clientY-r.top)/hp*60-m/2)/STEP)*STEP;
+  return Math.max(START,Math.min(END-m,s));
+}
+
+/* ---- drag with a tilt that follows velocity, like a swatch being thrown ---- */
+function bindDrag(t){
+  const el=t.el;
+  el.addEventListener("pointerdown",e=>{
+    if(running&&t.start!==null&&t.status!=="todo") return;
+    if(e.button!==0) return;
+    e.preventDefault(); el.setPointerCapture(e.pointerId);
+    const r=el.getBoundingClientRect();
+    const st={dx:e.clientX-r.left,dy:e.clientY-r.top,x:e.clientX,y:e.clientY,vx:0,rot:0,w:r.width,h:r.height,moved:false,lt:performance.now()};
+    el.classList.add("dragging"); el.style.width=r.width+"px"; el.style.height=r.height+"px";
+    el.style.left=r.left+"px"; el.style.top=r.top+"px"; el.style.transform="scale(1.05)";
+    document.body.appendChild(el);
+    const tick=()=>{ if(!el.classList.contains("dragging")) return;
+      st.rot+=((Math.max(-14,Math.min(14,st.vx*.09)))-st.rot)*.18; st.vx*=.88;
+      el.style.transform=`scale(1.05) rotate(${reduced?0:st.rot}deg)`; requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+    const move=ev=>{
+      const now=performance.now(), dt=Math.max(8,now-st.lt);
+      st.vx=st.vx*.6+((ev.clientX-st.x)/dt*16)*.4*10; st.x=ev.clientX; st.y=ev.clientY; st.lt=now; st.moved=true;
+      el.style.left=(ev.clientX-st.dx)+"px"; el.style.top=(ev.clientY-st.dy)+"px";
+      const lr=lane.getBoundingClientRect();
+      const over=ev.clientX>lr.left-30&&ev.clientX<lr.right+30&&ev.clientY>lr.top-20&&ev.clientY<lr.bottom+20;
+      el.classList.toggle("over",over);
+      if(over){
+        const s=slotFromY(ev.clientY,t.mins), f=freeSlot(s,t.mins,t), hp=hourPx();
+        ghost.hidden=false; ghost.classList.toggle("bad",f===null);
+        const g=f??s; ghost.style.top=((g-START)/60*hp+2)+"px"; ghost.style.height=(t.mins/60*hp-4)+"px";
+        el.querySelector(".when").textContent=`Tue ${fmt(g)}`;
+      }else ghost.hidden=true;
+    };
+    const up=ev=>{
+      el.removeEventListener("pointermove",move); el.removeEventListener("pointerup",up); el.removeEventListener("pointercancel",up);
+      const over=el.classList.contains("over"); ghost.hidden=true;
+      const fr=el.getBoundingClientRect();
+      el.classList.remove("dragging","over"); el.style.width=""; el.style.left="";
+      if(over){
+        const f=freeSlot(slotFromY(ev.clientY,t.mins),t.mins,t);
+        t.start=f; if(f!==null) say(`Scheduled “${t.title}” at ${fmt(f)}.`);
+      }else if(st.moved||t.start!==null){ t.start=null; }
+      layout();
+      // FLIP: animate from where the card was dropped into its new home
+      const to=el.getBoundingClientRect();
+      el.style.transition="none";
+      el.style.transform=`translate(${fr.left-to.left}px,${fr.top-to.top}px) rotate(${st.rot}deg)`;
+      requestAnimationFrame(()=>{ el.style.transition=""; layout(); });
+    };
+    el.addEventListener("pointermove",move); el.addEventListener("pointerup",up); el.addEventListener("pointercancel",up);
+  });
+  el.addEventListener("keydown",e=>{
+    if(running) return;
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault();
+      if(t.start===null){ const f=freeSlot(START,t.mins,t); if(f!==null){t.start=f; say(`Scheduled “${t.title}” at ${fmt(f)}.`);} }
+      else t.start=null;
+      layout(); t.el.focus();
+    }
+  });
+}
+
+/* ---- idle simulation + animation state machine ---- */
+let state="rest";
+function setState(s){
+  if(s===state) return; state=s;
+  const work=s==="working";
+  $("sRest").classList.toggle("on",!work); $("sWork").classList.toggle("on",work); $("sWork").classList.toggle("work",work);
+  const a=$(work?"vWork":"vRest"), b=$(work?"vRest":"vWork");
+  a.currentTime=0; a.play().catch(()=>{}); a.classList.remove("off"); b.classList.add("off");
+  $("poster").src=work?"media/bear-working.jpg":"media/bear-rest.jpg";
+}
+function say(txt){ const b=$("bubble"); b.textContent=txt; b.classList.remove("hide"); clearTimeout(say.t); say.t=setTimeout(()=>b.classList.add("hide"),2600); }
+function log(txt){ const d=document.createElement("div"); d.innerHTML=`<time>${fmt(Math.floor(simMin/5)*5)}</time><span>${txt}</span>`; $("log").prepend(d); }
+function addXP(n,el){
+  dayXP+=n; $("xpTxt").textContent=`${Math.min(dayXP,200)} / 200`; $("xpBar").style.width=Math.min(100,dayXP/2)+"%";
+  const r=el.getBoundingClientRect(), f=document.createElement("div"); f.className="float"; f.textContent=`+${n} XP`;
+  f.style.left=(r.right-60)+"px"; f.style.top=(r.top)+"px"; document.body.appendChild(f); setTimeout(()=>f.remove(),1300);
+}
+function startDay(){
+  if(running) return; running=true; simMin=START; $("now").hidden=false; $("start").disabled=true;
+  tasks.forEach(t=>{ if(t.status==="done"&&t.start!==null) return; });
+  log("Day started."); last=performance.now(); raf=requestAnimationFrame(step);
+}
+function step(ts){
+  const dt=Math.min(100,ts-last); last=ts;
+  simMin+=dt/1000*25*speed;                         // 25 sim minutes per second at 1×
+  const hp=hourPx(); $("now").style.top=((simMin-START)/60*hp)+"px"; $("nowTxt").textContent=fmt(Math.floor(simMin));
+  let active=null;
+  for(const t of tasks){ if(t.start===null) continue;
+    const end=t.start+t.mins;
+    if(simMin>=t.start&&simMin<end){ active=t;
+      if(t.status==="todo"){ t.status="running"; t.el.classList.add("running"); $("status").textContent=`Working on: ${t.title}`; log(`Started ${t.title}`); }
+      t.el.querySelector(".prog").style.width=((simMin-t.start)/t.mins*100)+"%";
+    }else if(simMin>=end&&t.status!=="done"){ t.status="done"; t.el.classList.remove("running"); t.el.classList.add("done"); t.el.querySelector(".prog").style.width="100%"; addXP(t.xp,t.el); say(t.say); log(`Finished ${t.title}`); }
+  }
+  setState(active?"working":"rest");
+  if(!active) $("status").textContent=tasks.some(t=>t.start!==null&&t.start>simMin)?"Short break before the next task.":"Napping at the desk.";
+  const left=tasks.some(t=>t.start!==null&&t.status!=="done");
+  if(simMin>=END||!left){ endDay(); return; }
+  raf=requestAnimationFrame(step);
+}
+function endDay(){
+  running=false; cancelAnimationFrame(raf); setState("rest");
+  const n=tasks.filter(t=>t.status==="done").length;
+  $("status").textContent=`Day complete: ${n} task${n===1?"":"s"} done, +${dayXP} XP. The bear is resting.`;
+  say("Good day. Plan tomorrow when you're ready."); log("Day complete."); layoutLane();
+}
+function reset(){
+  cancelAnimationFrame(raf); running=false; simMin=START; dayXP=0; $("now").hidden=true;
+  tasks.forEach(t=>t.el.remove()); tasks=[]; $("log").innerHTML="";
+  $("xpTxt").textContent="0 / 200"; $("xpBar").style.width="0";
+  seed(); setState("rest"); $("status").textContent="Napping at the desk. Plan the day, then press Start day.";
+}
+function seed(){
+  makeTask("scan",9*60); makeTask("backtest",10*60+30);
+  ["match","learn","review","lesson"].forEach(k=>makeTask(k));
+  layout();
+}
+
+/* ---- chat as a command bar: answers become tasks ---- */
+const KEYS=[["scan",/market|hot|scan|polymarket|kalshi/i],["backtest",/backtest|strategy|sma|spy|crossover/i],["learn",/explain|what|mean|teach|learn|why/i],["match",/match|arena|rank|forecast/i],["review",/position|portfolio|review/i],["lesson",/lesson|journal|note/i]];
+function addFromChat(key,raw){
+  const t=makeTask(key); layout();
+  $("reply").innerHTML=`<b>Bear:</b> Added “${t.title}” to your deck (${t.mins} min, +${t.xp} XP). Drag it onto the day.`;
+  t.el.animate?.([{transform:"scale(.6) rotate(-8deg)",opacity:0},{transform:t.el.style.transform,opacity:1}],{duration:450,easing:"cubic-bezier(.2,.9,.25,1.2)"});
+}
+document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>addFromChat(b.dataset.add)));
+$("cmd").addEventListener("submit",e=>{
+  e.preventDefault(); const v=$("cmdIn").value.trim(); if(!v) return;
+  const hit=KEYS.find(([,re])=>re.test(v)); $("cmdIn").value="";
+  if(hit) addFromChat(hit[0]); else $("reply").innerHTML=`<b>Bear:</b> I can turn that into a task if it's about markets, backtests, matches, or a concept to learn.`;
+});
+$("start").addEventListener("click",startDay);
+$("reset").addEventListener("click",reset);
+$("speed").addEventListener("click",e=>{ speed=speed===1?4:1; e.currentTarget.setAttribute("aria-pressed",speed===4); });
+for(let h=9;h<18;h++){ const d=document.createElement("div"); d.className="hr"; d.style.top=`calc(var(--hour) * ${h-9})`; d.innerHTML=`<span>${fmt(h*60).replace(":00","")}</span>`; tl.insertBefore(d,lane); }
+addEventListener("resize",layoutLane);
+seed();
+</script>
+</body>
+</html>

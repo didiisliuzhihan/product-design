@@ -207,6 +207,20 @@ footer{padding-block:32px 48px;display:flex;justify-content:space-between;gap:16
 .chapter .q{font-family:var(--display);font-size:24px;line-height:1.35;color:var(--fg);padding-left:20px;border-left:2px solid var(--accent)}
 .chapter figure.ph{margin-top:8px}
 figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
+.chapter.wide{max-width:none}
+.chapter.wide .prose>p{max-width:68ch}
+.chapter h3.sub{font-family:var(--display);font-weight:500;font-size:22px;margin:28px 0 0;letter-spacing:-.01em}
+.chapter h3.sub:first-child{margin-top:0}
+.imgs{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px}
+.imgs figure,.vids figure{margin:0;min-width:0}
+.imgs img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block}
+.vids{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vids video{width:100%;aspect-ratio:5/4;object-fit:cover;border-radius:12px;background:#000;display:block}
+@media (max-width:640px){.imgs,.vids{grid-template-columns:1fr}}
+.proto{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#060608}
+.proto iframe{display:block;width:100%;border:0;background:#060608}
+.proto-bar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;font-size:13px;color:var(--muted);background:var(--surface);border-top:1px solid var(--line)}
+.proto-bar a{color:var(--accent);font-weight:500;text-decoration:none}
 .steps{display:grid;gap:0;margin-top:8px;border-top:1px solid var(--line)}
 .steps div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
 .steps b{font-weight:600;display:block}
@@ -397,8 +411,20 @@ const CASES = [
       {img:{label:"Paper: virtual trading account synced with live market data",ratio:"1920/945",src:"img/tb-paper.jpg"},cap:"Paper. A $10,000 virtual account that mirrors real market prices. Equity, P&L, Sharpe ratio, drawdown, and a day streak turn practice into a game with no real money at risk."},
       {img:{label:"Arena: ranked forecasting matches",ratio:"1920/945",src:"img/tb-arena.jpg"},cap:"Arena. Elo and tiers borrow from chess and ranked games, and the page states clearly that rank is not investment performance."},
       {img:{label:"My Bear: progression and persona",ratio:"1920/945",src:"img/tb-mybear.jpg"},cap:"My Bear. Each level asks for XP, conversations, and paper trades, so progression rewards learning, not risk taking."},
-      {p:"[[Add which of these you designed and one decision behind each. For example, why progression counts conversations and paper trades instead of profit.]]"},
       {img:{label:"Localization: before and after",ratio:"16/9"}}
+    ]},
+    {id:"decisions",h:"Design decisions",wide:true,blocks:[
+      {h3:"From an AI video to production 3D assets"},
+      {p:"The first concept was an AI-generated video of a brown bear at a trading desk. It worked once, but it could not be reused, and a bear reads as a bear market, the opposite of what a beginner should feel. I redesigned the character as a polar bear in a striped tie: friendly, calm, and clearly not a downturn."},
+      {p:"To grow the character into a long-term IP, I rebuilt it as real 3D. I mixed AI modeling with a hand-finished Blender pipeline, then rebuilt the desk scene and character animation and deployed them to the web. The same rigged model can now serve the app, marketing, and future learning modules."},
+      {imgs:[{src:"img/tb-bear-turnaround.jpg",label:"Turnaround sheet: front, back, left, right"},{src:"img/tb-bear-sit.jpg",label:"Character render: sitting"},{src:"img/tb-bear-think.jpg",label:"Character render: thinking"}]},
+      {steps:[["Character design","Polar bear in a striped tie, with a four-view turnaround sheet."],["AI modeling","Base mesh generated in Meshy from the turnaround."],["Rig and animate","Mesh cleanup, skeleton, and rest and working loops in Blender."],["Bake and render","Lighting and textures baked, seamless loops rendered for the web."],["Deploy","Loops ship on the site as the bear's animation states."]]},
+      {videos:[{src:"media/bear-rest.mp4",poster:"media/bear-rest.jpg",label:"State: rest"},{src:"media/bear-working.mp4",poster:"media/bear-working.jpg",label:"State: working (seamless loop)"}]},
+      {h3:"Calendar over chat: plan the bear's day"},
+      {p:"Chat-first AI products are cheap to build, but long answers move the cost to the user. People read paragraphs to find the next step, and the product gives them little direction."},
+      {p:"I swapped the weight of the two surfaces. The calendar becomes the main stage and chat shrinks to a one-line command bar. Anything you ask the bear turns into a task card. You drag cards onto the day, press Start day, and the bear works through them on its own, the way an idle game runs. Its animation state machine switches from rest to working as each task runs, and XP lands as tasks finish."},
+      {p:"The drag interaction borrows from tactile calendar UIs: cards tilt with the speed of your hand, preview the drop time, and spring into place."},
+      {frame:{src:"traderbear-planner.html",height:900,label:"Interactive prototype. Drag a card from the deck onto the timeline, then press Start day."}}
     ]},
     {id:"outcome",h:"Outcome",blocks:[{p:"TraderBear is live with real customers. [[Add impact: shipped features, test results, or engagement numbers.]]"}]},
     {id:"reflection",h:"Reflection",blocks:[{p:"[[One or two lessons. For example, a trade-off between fun and financial responsibility.]]"}]}
@@ -634,6 +660,10 @@ function block(b){
   if(b.p) return `<p>${fmt(b.p)}</p>`;
   if(b.q) return `<p class="q">${fmt(b.q)}</p>`;
   if(b.img) return `<div>${ph(b.img)}${b.cap?`<figcaption>${fmt(b.cap)}</figcaption>`:""}</div>`;
+  if(b.h3) return `<h3 class="sub">${fmt(b.h3)}</h3>`;
+  if(b.imgs) return `<div class="imgs">${b.imgs.map(i=>`<figure><img src="${esc(i.src)}" alt="${esc(i.label)}" loading="lazy"><figcaption>${fmt(i.label)}</figcaption></figure>`).join("")}</div>`;
+  if(b.videos) return `<div class="vids">${b.videos.map(v=>`<figure><video src="${esc(v.src)}" poster="${esc(v.poster)}" muted loop playsinline autoplay preload="metadata"></video><figcaption>${fmt(v.label)}</figcaption></figure>`).join("")}</div>`;
+  if(b.frame) return `<div class="proto"><iframe src="${esc(b.frame.src)}" title="Interactive prototype" loading="lazy" style="height:${b.frame.height}px"></iframe><div class="proto-bar"><span>${fmt(b.frame.label)}</span><a href="${esc(b.frame.src)}" target="_blank" rel="noopener">Open full screen ↗</a></div></div>`;
   if(b.steps) return `<div class="steps">${b.steps.map(s=>`<div><b>${fmt(s[0])}</b><span>${fmt(s[1])}</span></div>`).join("")}</div>`;
   if(b.cards) return `<div class="cards${b.cards.length===4?" c2":""}">${b.cards.map(s=>`<div><b>${fmt(s[0])}</b><span>${fmt(s[1])}</span></div>`).join("")}</div>`;
   return "";
@@ -700,7 +730,7 @@ function renderCase(c){
     <div class="case-body">
       <nav class="toc" aria-label="Sections"><p class="mono">On this page</p>${c.sections.map(s=>`<a href="#${c.id}" data-target="s-${s.id}">${esc(s.h)}</a>`).join("")}</nav>
       <div>
-        ${c.sections.map(s=>`<section class="chapter" id="s-${s.id}"><p class="mono">${esc(s.h)}</p><h2>${esc(s.h)}</h2><div class="prose">${s.blocks.map(block).join("")}</div></section>`).join("")}
+        ${c.sections.map(s=>`<section class="chapter${s.wide?" wide":""}" id="s-${s.id}"><p class="mono">${esc(s.h)}</p><h2>${esc(s.h)}</h2><div class="prose">${s.blocks.map(block).join("")}</div></section>`).join("")}
         <a class="next" href="#${nx.id}"><div><p class="mono">Next project</p><h3>${fmt(nx.title)}</h3></div><span class="go">→</span></a>
       </div>
     </div>`;
