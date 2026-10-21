@@ -261,6 +261,21 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .proto{scroll-margin-top:90px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#060608}
 .proto iframe{display:block;width:100%;border:0;background:#060608}
 .immersive{margin-top:40px}
+.zoomable{cursor:zoom-in}
+.ph:has(.zoomable)::after{content:"⤢ Click to enlarge";position:absolute;right:10px;bottom:10px;font:500 11.5px var(--body);color:#fff;background:rgba(20,24,32,.62);padding:5px 9px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none}
+.ph:hover::after{opacity:1}
+@media (hover:none){.ph:has(.zoomable)::after{opacity:.85;content:"⤢"}}
+.zoomable:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.lb{position:fixed;inset:0;z-index:100;background:rgba(10,12,16,.92);display:none}
+.lb.open{display:block}
+.lb-scroll{position:absolute;inset:0 0 56px;overflow:auto;display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px));overscroll-behavior:contain}
+.lb-scroll img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;border-radius:8px;background:#fff;user-select:none;-webkit-user-drag:none}
+.lb.zoomed .lb-scroll{place-items:start;cursor:grab}
+.lb.zoomed .lb-scroll img{max-width:none;max-height:none;width:auto;cursor:zoom-out}
+.lb-bar{position:absolute;left:0;right:0;bottom:0;height:56px;display:flex;align-items:center;gap:10px;padding:0 max(16px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(16px,env(safe-area-inset-left,0px));color:#e9ecf2}
+.lb-cap{flex:1;min-width:0;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#c8cdd8}
+.lb-btn{font:500 13.5px var(--body);color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:8px 14px;cursor:pointer}
+.lb-btn:hover{background:rgba(255,255,255,.2)}
 /* Misfits card deck: swipe like the app's capsule bag */
 .dex{--paper:#f6f1e3;--ink:#1f3a44;display:grid;justify-items:center;gap:14px;padding:36px 16px 24px;border-radius:20px;background:linear-gradient(180deg,#e3eef6,#cddfea);outline:none}
 .dex:focus-visible{box-shadow:0 0 0 3px var(--accent)}
@@ -936,6 +951,46 @@ function wireDex(root){
   });
   place();
 }
+/* Lightbox: click any case image to inspect it */
+function openLightbox(src,alt){
+  let lb=document.getElementById("lb");
+  if(!lb){
+    lb=document.createElement("div"); lb.id="lb"; lb.className="lb"; lb.setAttribute("role","dialog"); lb.setAttribute("aria-modal","true"); lb.setAttribute("aria-label","Image viewer");
+    lb.innerHTML=`<div class="lb-scroll" id="lbScroll"><img id="lbImg" alt=""></div>
+      <div class="lb-bar"><span class="lb-cap" id="lbCap"></span><button type="button" class="lb-btn" id="lbZoom">Zoom in</button><button type="button" class="lb-btn" id="lbClose" aria-label="Close">✕</button></div>`;
+    document.body.appendChild(lb);
+    const sc=lb.querySelector("#lbScroll"), img=lb.querySelector("#lbImg"), zb=lb.querySelector("#lbZoom");
+    const setZoom=(on,cx,cy)=>{
+      const r=img.getBoundingClientRect(), fx=cx!=null?(cx-r.left)/r.width:.5, fy=cy!=null?(cy-r.top)/r.height:.5;
+      lb.classList.toggle("zoomed",on); zb.textContent=on?"Fit to screen":"Zoom in";
+      if(on) requestAnimationFrame(()=>{ sc.scrollLeft=img.offsetWidth*fx-sc.clientWidth/2; sc.scrollTop=img.offsetHeight*fy-sc.clientHeight/2; });
+    };
+    let drag=null, moved=false;
+    sc.addEventListener("pointerdown",e=>{ if(!lb.classList.contains("zoomed")||e.pointerType==="touch") return; drag={x:e.clientX,y:e.clientY,l:sc.scrollLeft,t:sc.scrollTop}; moved=false; sc.setPointerCapture(e.pointerId); });
+    sc.addEventListener("pointermove",e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; if(Math.abs(dx)+Math.abs(dy)>4) moved=true; sc.scrollLeft=drag.l-dx; sc.scrollTop=drag.t-dy; });
+    sc.addEventListener("pointerup",()=>{ drag=null; });
+    img.addEventListener("click",e=>{ if(moved){moved=false;return;} setZoom(!lb.classList.contains("zoomed"),e.clientX,e.clientY); });
+    sc.addEventListener("click",e=>{ if(e.target===sc) close(); });
+    zb.addEventListener("click",()=>setZoom(!lb.classList.contains("zoomed")));
+    const close=()=>{ lb.classList.remove("open","zoomed"); document.documentElement.style.overflow=""; lb._ret?.focus(); };
+    lb.querySelector("#lbClose").addEventListener("click",close);
+    document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&lb.classList.contains("open")) close(); });
+  }
+  const img=lb.querySelector("#lbImg"); img.src=src; img.alt=alt||"";
+  lb.querySelector("#lbCap").textContent=alt||"";
+  lb._ret=document.activeElement; lb.classList.remove("zoomed"); lb.querySelector("#lbZoom").textContent="Zoom in";
+  lb.classList.add("open"); document.documentElement.style.overflow="hidden"; lb.querySelector("#lbClose").focus();
+}
+function wireZoom(root){
+  root.querySelectorAll(".chapter .ph img, .chapter .imgs img, .case-hero .ph img").forEach(img=>{
+    if(img.dataset.zoom) return; img.dataset.zoom=1;
+    img.classList.add("zoomable"); img.tabIndex=0; img.setAttribute("role","button");
+    const label=(img.alt||"Image")+" (open larger)"; img.setAttribute("aria-label",label);
+    const open=()=>openLightbox(img.currentSrc||img.src,img.alt);
+    img.addEventListener("click",open);
+    img.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();open();} });
+  });
+}
 function immersiveHTML(c){
   const im=c.immersive, live=!!im.url;
   return `<section class="immersive${im.device==="phone"?" phone":""}" aria-label="${esc(im.label)}">
@@ -1029,6 +1084,7 @@ function renderCase(c){
   if(c.embed) wireEmbed(c);
   if(c.immersive) wireImmersive(c);
   document.querySelectorAll("[data-dex]").forEach(wireDex);
+  wireZoom(document.getElementById("case"));
   document.querySelectorAll(".proto.demo").forEach(box=>{
     const v=box.querySelector("video"), fr=box.querySelector("iframe");
     box.querySelectorAll("[data-view]").forEach(btn=>btn.addEventListener("click",()=>{
