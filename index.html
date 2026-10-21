@@ -251,6 +251,8 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .chapter h3.sub{font-family:var(--display);font-weight:500;font-size:22px;margin:28px 0 0;letter-spacing:-.01em}
 .chapter h3.sub:first-child{margin-top:0}
 .imgs{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px}
+.imgs[style*="--ar:auto"]{align-items:start}
+.imgs[style*="--ar:auto"] img{height:auto}
 .narrowset{max-width:560px;margin-inline:auto;width:100%}
 .imgs.narrowset:has(figure:only-child){max-width:320px}
 .imgs figure,.vids figure{margin:0;min-width:0}
@@ -694,12 +696,19 @@ const CASES = [
     {id:"nest",h:"The Nest",blocks:[
       {h3:"A collection that keeps living"},
       {p:"After the draw, characters share a home, develop relationships, and generate small stories that return as surprise postcards. You arrange the room, tap characters for sounds without breaking the ambience, and watch relationships unfold through small scenes."},
-      {imgs:[{src:"img/bcs-nest-day.jpg",label:"Day: a shared setting"},{src:"img/bcs-nest-night.jpg",label:"Night: a different atmosphere"}]}
+      {imgs:[{src:"img/bcs-nest-day.jpg",label:"Day: a shared setting"},{src:"img/bcs-nest-night.jpg",label:"Night: a different atmosphere"}]},
+      {p:"On mobile, the Nest is a home screen of its own: switch day and night, arrange the room, tap a resident to spend a moment with it, and see who lives there and who is still waiting to move in."},
+      {h3:"Stories that come back as postcards"},
+      {p:"While you are away, residents get into small scenes together. Each scene becomes a postcard that is mailed into the gacha pool, so one day the player draws a capsule and finds a moment from their own Nest inside. The collection keeps writing new content without a new character drop."},
+      {imgs:[{src:"img/bcs-nest-mobile.jpg",label:"My Nest on mobile: day and night, residents, layout"},{src:"img/bcs-nest-postcard.jpg",label:"A Nest moment, mailed back as a surprise postcard"}],ratio:"auto",narrow:true}
     ]},
     {id:"social",h:"Social participation",blocks:[
       {h3:"A little message. A familiar face."},
       {cards:[["Shared postcard pool","Make a card with images, memes, and stamps, and let another member discover it."],["Character tasks","A playful prompt connects the digital collectible to an in-person moment."],["Exploring next","Face-to-face card and capsule exchanges through AirDrop."]]},
-      {imgs:[{src:"img/bcs-toycard.jpg",label:"A character card becomes an invitation"}],ratio:"384/469",narrow:true}
+      {imgs:[{src:"img/bcs-toycard.jpg",label:"A character card becomes an invitation"}],ratio:"384/469",narrow:true},
+      {h3:"Wipe the glass to unlock"},
+      {p:"Some characters stay behind frosted glass until you finish their small task offline, such as sitting with a friend for a while. Then you wipe the glass with your finger to reveal the 3D figure, which can move into your Nest. The reward is earned in person and claimed with a playful gesture."},
+      {imgs:[{src:"img/bcs-unlock.jpg",label:"Locked model: do the task, then wipe the glass"}],ratio:"714/839",narrow:true}
     ]},
     {id:"wireframes",h:"Wireframes",blocks:[
       {p:"To suit mobile, I rebuilt the card collection around swipe-to-browse and a tap to meet each character, while the page outside the cards still scrolls."},
