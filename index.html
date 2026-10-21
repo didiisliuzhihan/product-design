@@ -507,6 +507,45 @@ const CASES = [
   ]
 },
 {
+  id:"b2b", tag:"B2B · Insurtech", short:"2026", kind:"mini", tint:"--t5",
+  eyebrow:"B2B workflow · Design assessment", year:"2026",
+  title:"Bindwise",
+  summary:"A B2B review tool for underwriting assistants: find scattered documents, check coverage against sources, and turn gaps into editable broker requests.",
+  subtitle:"An evidence-led review workflow for underwriting assistants. Find the documents, resolve the exceptions, then bind, with people verifying every step.",
+  chips:["B2B","Enterprise workflow","Research synthesis","Human in the loop"],
+  meta:[["Role","Product Designer, solo"],["Type","Take-home design assessment"],["Users","Underwriting assistants"],["Platform","Web, desktop"]],
+  links:[["Interactive prototype","https://assessment.zhihanliu.art/prototype.html"],["Research and rationale","https://assessment.zhihanliu.art/index.html"]],
+  hero:{label:"Bindwise review checklist",ratio:"2160/1290",src:"img/b2b-review.jpg"},
+  card:"img/b2b-cover.jpg",
+  tldr:[["Problem","Documents arrive by portal, email, and fax. Coverage mismatches trigger rounds of broker follow-up before a policy can bind."],["What I did","Synthesized interviews and a usage log, then designed a three-screen workflow: find sources, check evidence, request what is missing."],["Result","A working prototype with research rationale. Next step: validate that it cuts search effort and clarification cycles."]],
+  sections:[
+    {id:"brief",h:"Client needs",blocks:[
+      {steps:[["Users","Underwriting assistants reviewing insurance documents before binding."],["Problems","Documents are scattered across channels. Coverage discrepancies need clarification and repeated broker follow-up."],["Core needs","Find relevant documents, compare coverage against the client's authorized requirements, and track unresolved issues."],["Priority","Keep the familiar checklist, link findings to sources, and turn review gaps into structured, editable email requests."],["Oversight","People verify evidence, approve outgoing requests, and review revised documents before handoff."],["To validate","Whether this approach reduces search effort and clarification cycles."]]}
+    ]},
+    {id:"evidence",h:"What the evidence said",blocks:[
+      {p:"I worked from two user interviews and a 30-day usage log. The time went into finding sources, not filling the checklist."},
+      {cards:[["11 min vs 3 min","Average time to find documents versus fill the checklist (54 submissions)."],["17 / 54","Submissions with documents off the portal, by email or fax. These took longer to locate."],["2.1 days","Median logged broker reply, with nine waits over four days in one record."],["23/61 · 19/54","Limit mismatches across the two users' submissions. Frequent enough to need a safe resolution path."]]},
+      {q:"One user asked for faster checklist entry, but her log pointed to mismatch emails and waiting. The other named retrieval as his main pain. So I prioritized finding sources and resolving exceptions over speeding up the checklist."},
+      {p:"These are stage averages from the supplied data, not total binding time, and I do not claim a measured saving."}
+    ]},
+    {id:"workflow",h:"The workflow",blocks:[
+      {img:{label:"Journey: normal path and exception loop",ratio:"1200/400",src:"img/b2b-journey.svg"},cap:"The normal path goes straight to bind review. Missing, conflicting, or uncertain evidence enters a human-reviewed exception loop."},
+      {steps:[["01 Documents","Locate required originals across portal, email, and fax. People confirm uncertain matches before linking."],["02 Review checklist","Check suggested findings against linked originals and the authorized request. People set the requirement and verify values."],["03 Follow-up","Turn reviewed gaps into a structured broker email. People approve every message and review the corrected documents."]]},
+      {img:{label:"01 Documents: a suggested fax match waits for confirmation",ratio:"2160/1290",src:"img/b2b-documents.jpg"},cap:"Documents. Sources from every channel in one list, with a suggested match the assistant confirms before it is linked."},
+      {img:{label:"Source excerpt opened from the checklist",ratio:"2160/1290",src:"img/b2b-source.jpg"},cap:"Every finding links to its source. Verification unlocks only after the assistant opens the original."},
+      {img:{label:"02 Review checklist with a coverage mismatch",ratio:"2160/1290",src:"img/b2b-review.jpg"},cap:"Review checklist. The familiar checklist stays, now with findings, sources, and a clear verdict per row."},
+      {img:{label:"03 Follow-up: editable broker request",ratio:"2160/1290",src:"img/b2b-followup.jpg"},cap:"Follow-up. Gaps become a structured, editable email that cites its sources. Nothing sends without approval."}
+    ]},
+    {id:"try",h:"Try the prototype",wide:true,blocks:[
+      {frame:{src:"https://assessment.zhihanliu.art/prototype.html",height:860,label:"Interactive prototype. Confirm the fax match, open the sources, then review and send the follow-up. All client details are illustrative."}}
+    ]},
+    {id:"next",h:"What I would validate next",blocks:[
+      {p:"Run the workflow with underwriting assistants on real submissions and measure two things: time to locate all required documents, and broker follow-ups per coverage mismatch. Also test how much people trust suggested matches, and where they still want to check the original themselves."},
+      {p:"All prototype client details, amounts, and documents are illustrative. Research claims come only from the supplied interviews and usage log."}
+    ]}
+  ]
+},
+{
   id:"seven-sense", tag:"Ops + guest app", short:"2024–", kind:"feature", tint:"--t3",
   eyebrow:"Operations + guest app", year:"2024 – Now",
   title:"Seven Sense",
@@ -557,25 +596,8 @@ const CASES = [
     {id:"build",h:"Build",blocks:[{img:{label:"Live site screenshots",ratio:"16/10"}},{p:"[[How you built it and what changed from the Figma design.]]"}]},
     {id:"next",h:"What I'd do next",blocks:[{p:"[[With more time, what would you test or improve?]]"}]}
   ]
-},
-{
-  id:"b2b", tag:"Exercise · B2B", short:"Take-home", kind:"mini", tint:"--t5",
-  eyebrow:"Design exercise · B2B", year:"[[year]]",
-  title:"B2B Product Optimization",
-  summary:"Take-home challenge: turned a client's requirements into a clearer B2B workflow.",
-  subtitle:"A take-home challenge: turning a client's requirements into a clearer, faster B2B workflow. [[Edit with the actual brief]]",
-  chips:["B2B","UX audit","Workflow redesign"],
-  meta:[["Role","Product Designer"],["Type","Take-home exercise"],["Timeline","[[e.g. 1 week]]"],["Tools","Figma"]],
-  links:[["Prototype",""],["Figma file",""]],
-  hero:{label:"Hero: redesigned dashboard or key screen",ratio:"16/9"},
-  tldr:[["Brief","[[The client's request in one sentence]]"],["What I did","[[Audit, prioritize, redesign]]"],["Result","[[Outcome or reviewer feedback]]"]],
-  sections:[
-    {id:"brief",h:"Client needs",blocks:[{p:"[[Who the client is, who uses the product, and what they asked for.]]"}]},
-    {id:"audit",h:"Audit",blocks:[{p:"[[Problems you found in the current product, ranked by impact.]]"},{img:{label:"Annotated audit of the current product",ratio:"16/10"}}]},
-    {id:"redesign",h:"Redesign",blocks:[{img:{label:"Before and after",ratio:"16/9"}},{p:"[[Key decisions and how each one maps to a client need.]]"}]},
-    {id:"tradeoffs",h:"Trade-offs",blocks:[{p:"[[What you chose not to do, and why.]]"}]}
-  ]
 }
+
 ];
 
 /* ---------- Rendering ---------- */
@@ -604,7 +626,7 @@ function renderHome(){
       <a class="card3d" href="#${c.id}" aria-label="${esc(c.title)}: ${isCase?"read case study":"view exercise"}">
         <div class="face front">
           <div class="ctop"><span class="mono">${esc(c.tag)}</span><span class="mono">${esc(c.short)}</span></div>
-          <div class="cimg">${ph({label:c.hero.label,ratio:"5/4",src:c.hero.src},c.tint)}</div>
+          <div class="cimg">${ph({label:c.hero.label,ratio:"5/4",src:c.card||c.hero.src},c.tint)}</div>
           <div class="cname">${fmt(c.title)}</div>
           <div class="crole">${fmt(c.meta[0][1])}</div>
         </div>
