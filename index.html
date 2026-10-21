@@ -217,7 +217,7 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .vids{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .vids video{width:100%;aspect-ratio:5/4;object-fit:cover;border-radius:12px;background:#000;display:block}
 @media (max-width:640px){.imgs,.vids{grid-template-columns:1fr}}
-.proto{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#060608}
+.proto{scroll-margin-top:90px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#060608}
 .proto iframe{display:block;width:100%;border:0;background:#060608}
 .proto-bar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;font-size:13px;color:var(--muted);background:var(--surface);border-top:1px solid var(--line)}
 .proto-bar a{color:var(--accent);font-weight:500;text-decoration:none}
@@ -387,7 +387,7 @@ const CASES = [
   subtitle:"Designing a gamified, AI-powered community that helps people who have never traded understand it, try it, and come back.",
   chips:["Gamification","Community","AI features","Localization"],
   meta:[["Role","Product Designer"],["Team","CEO, co-founder, marketing lead"],["Timeline","2026 – Present"],["Platform","Mobile app"]],
-  links:[["Open My Bear in a new tab","https://trader-bear.com/my-bear"],["Figma",""]],
+  links:[["Try the interactive prototype ↓","scroll:proto"],["Open My Bear in a new tab","https://trader-bear.com/my-bear"],["Figma",""]],
   embed:{url:"https://trader-bear.com/my-bear", label:"TraderBear", mobile:"img/tb-mobile-chat.jpg", desktop:"img/tb-desktop-chat.jpg"},
   hero:{label:"TraderBear: the bear at its trading desk", ratio:"16/9", src:"img/tb-cover.jpg"},
   tldr:[["Problem","Trading feels risky and full of jargon, so most beginners never start or quit after the first loss."],["What I did","Built a gamification framework, designed AI-powered community mechanics, and led localization design for the mobile app."],["Outcome","[[In progress. Add a launch milestone, test result, or metric]]"]],
@@ -715,7 +715,7 @@ function wireEmbed(c){
 
 function renderCase(c){
   const i=CASES.indexOf(c), nx=CASES[(i+1)%CASES.length];
-  const links=c.links.map(([t,u])=>u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} <span class="arr">↗</span></a>`:`<span class="btn pending" title="Link coming soon">${esc(t)} · link coming</span>`).join("");
+  const links=c.links.map(([t,u])=>u&&u.startsWith("scroll:")?`<button type="button" class="btn primary" data-scroll="${esc(u.slice(7))}">${esc(t)}</button>`:u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} <span class="arr">↗</span></a>`:`<span class="btn pending" title="Link coming soon">${esc(t)} · link coming</span>`).join("");
   document.getElementById("case").innerHTML=`
     <section class="case-top">
       <a class="back" href="#work">← All work</a>
@@ -741,6 +741,7 @@ function renderCase(c){
   // section headers: hide the duplicate eyebrow (keeps markup uniform)
   document.querySelectorAll(".chapter > .mono").forEach(m=>m.remove());
   if(c.embed) wireEmbed(c);
+  document.querySelectorAll("[data-scroll]").forEach(b=>b.addEventListener("click",()=>document.querySelector("."+b.dataset.scroll)?.scrollIntoView({behavior:"smooth",block:"start"})));
   spy();
 }
 
