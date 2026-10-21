@@ -251,14 +251,44 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .chapter h3.sub{font-family:var(--display);font-weight:500;font-size:22px;margin:28px 0 0;letter-spacing:-.01em}
 .chapter h3.sub:first-child{margin-top:0}
 .imgs{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px}
+.narrowset{max-width:560px;margin-inline:auto;width:100%}
+.imgs.narrowset:has(figure:only-child){max-width:320px}
 .imgs figure,.vids figure{margin:0;min-width:0}
-.imgs img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block}
+.imgs img{width:100%;aspect-ratio:var(--ar,1/1);object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block}
 .vids{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.vids video{width:100%;aspect-ratio:5/4;object-fit:cover;border-radius:12px;background:#000;display:block}
-@media (max-width:640px){.imgs,.vids{grid-template-columns:1fr}}
+.vids video{width:100%;aspect-ratio:var(--ar,5/4);object-fit:cover;border-radius:12px;background:#000;display:block}
+@media (max-width:640px){.imgs,.vids{grid-template-columns:1fr!important}.imgs[style*="repeat(4"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}.vids.narrowset{grid-template-columns:1fr 1fr!important}}
 .proto{scroll-margin-top:90px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#060608}
 .proto iframe{display:block;width:100%;border:0;background:#060608}
 .immersive{margin-top:40px}
+/* Misfits card deck: swipe like the app's capsule bag */
+.dex{--paper:#f6f1e3;--ink:#1f3a44;display:grid;justify-items:center;gap:14px;padding:36px 16px 24px;border-radius:20px;background:linear-gradient(180deg,#e3eef6,#cddfea);outline:none}
+.dex:focus-visible{box-shadow:0 0 0 3px var(--accent)}
+.dex-stage{position:relative;width:min(320px,100%);aspect-ratio:320/500}
+.dex-card{position:absolute;inset:0;perspective:1200px;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .45s cubic-bezier(.2,.8,.25,1.1),opacity .3s;cursor:grab}
+.dex-card:not(.top){pointer-events:none}
+.dex-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.75,.2,1)}
+.dex-card.flipped .dex-in{transform:rotateY(180deg)}
+.dex-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--paper);color:var(--ink);border-radius:20px;padding:12px 12px 14px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 18px 34px -18px rgba(30,50,60,.55);overflow:hidden}
+.dex-back{transform:rotateY(180deg)}
+.dex-art{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:1/1;background:#dfe8ee}
+.dex-art img{width:100%;height:100%;object-fit:cover;display:block}
+.dex-tag,.dex-no{position:absolute;top:8px;font:600 9.5px var(--body);letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.85);color:#33505a;padding:3px 8px;border-radius:999px}
+.dex-tag{left:8px}.dex-no{right:8px}
+.dex-face h4{font-family:var(--body);font-weight:700;font-size:20px;margin:8px 4px 0;letter-spacing:-.01em}
+.dex-line{font-size:13px;margin:0 4px;color:#3d5560}
+.dex-task{font-size:13px;margin:4px 4px 0;color:#b0412f}
+.dex-flip{margin-top:auto;font-size:12px;color:#6b8088;padding:0 4px}
+.dex-photo{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#e9e4d6;display:grid;place-items:center}
+.dex-photo img:first-child{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.dex-model{position:absolute;right:6px;bottom:6px;width:64px;height:64px;object-fit:cover;border-radius:10px;border:2px solid var(--paper)}
+.dex-q{font-weight:600;font-size:15px;margin:8px 4px 0}
+.dex-story{font-size:12.5px;line-height:1.5;color:#4d636c;margin:0 4px;overflow:auto}
+.dex-nav{display:flex;align-items:center;gap:22px}
+.dex-btn{width:48px;height:48px;border-radius:50%;border:0;background:var(--paper,#f6f1e3);color:#1f3a44;font-size:18px;cursor:pointer;box-shadow:0 6px 14px -8px rgba(30,50,60,.5)}
+.dex-btn:hover{transform:scale(1.05)}
+.dex-count{font:500 14px var(--mono);color:#1f3a44;min-width:48px;text-align:center}
+.dex-hint{font-size:12.5px;color:#4b6470;margin:0}
 .imm-stage{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);aspect-ratio:1440/900;max-width:100%;background:#fffdf6}
 .imm-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
 .imm-stage::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,30,28,.18));pointer-events:none}
@@ -269,6 +299,8 @@ figcaption{font-size:13.5px;color:var(--muted);margin-top:10px}
 .imm-go span{font-size:11px}
 .imm-go:hover{transform:translateX(-50%) scale(1.04)}
 .imm-soon{position:absolute;left:16px;bottom:16px;z-index:2;font:500 12px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:6px 12px;border-radius:999px}
+.immersive.phone .imm-stage.on{height:auto;aspect-ratio:auto;display:grid;place-items:center;padding:28px 16px;background:linear-gradient(180deg,#e3eef6,#c9dceb)}
+.imm-phone{width:min(390px,100%);height:min(780px,78vh);border:10px solid #111;border-radius:44px;overflow:hidden;background:#fff;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
 .imm-note{font-size:13.5px;color:var(--muted);margin-top:10px}
 .imm-note a{color:var(--accent)}
 .prose .narrow{max-width:360px;margin-inline:auto}
@@ -486,38 +518,53 @@ const CASES = [
   ]
 },
 {
-  id:"bad-children-shop", tag:"Community", short:"2026", kind:"feature", tint:"--t2",
-  eyebrow:"Community · Web app", year:"2026",
-  title:"Bad Children Shop",
-  summary:"A gamified community web app that links a physical gashapon machine to digital identities. Tested with 30+ beta users.",
-  subtitle:"A gamified community web app that connects a physical gashapon machine to digital identities, redesigned after testing with 30+ beta users.",
-  chips:["User research","Beta testing","Social design","Prototyping"],
-  meta:[["Role","Sole designer and builder"],["Partner","Community operations team, entertainment company"],["Timeline","2026 · Ongoing"],["Platform","Web, desktop and mobile"]],
-  links:[["Live prototype",""],["Figma",""]],
-  hero:{label:"Hero: gashapon pull screen and avatar",ratio:"16/9"},
-  tldr:[["Problem","A gashapon pull is fun once. The community team needed a reason for members to keep coming back between events."],["What I did","Designed the product end to end, ran beta tests with 30+ users, and redesigned the social layer from what I learned."],["Outcome","Passed internal beta. Three new features designed around the strongest signal: acquaintance-based social play."]],
+  id:"flex", tag:"Web · Conversion", short:"2026", kind:"mini", tint:"--t4",
+  eyebrow:"Landing page · Venture launch", year:"2026",
+  title:"Flex Academy",
+  summary:"One landing page for two audiences: first-time rental owners and growing operators. Designed in Figma and built as a working website.",
+  subtitle:"A sister site to The Flex that serves two audiences at once: people starting their first short-term rental, and operators who need systems to grow.",
+  chips:["Landing page","Conversion","Motion","Figma"],
+  meta:[["Role","Product Designer, solo"],["Brief","Launch page for a new venture"],["Tools","Figma, AI-assisted web build"],["Platform","Web, desktop and mobile"]],
+  links:[["Live website","https://didiisliuzhihan.github.io/flex-academy/"],["Figma design","https://www.figma.com/design/iwDQR0PKHo8j8FlCNg2niF/flex?node-id=80-2934"],["Mobile prototype","https://www.figma.com/proto/iwDQR0PKHo8j8FlCNg2niF/flex?node-id=31-1030&starting-point-node-id=31%3A1030"],["Loom walkthrough","https://www.loom.com/share/4388e9f56ad648ba8eaa5f40f2b751f1"]],
+  hero:{label:"Flex Academy homepage",ratio:"1440/900",src:"img/flex-hero.jpg"},
+  card:"img/flex-cover.jpg",
+  immersive:{url:"https://didiisliuzhihan.github.io/flex-academy/",poster:"img/flex-hero.jpg",label:"Flex Academy homepage"},
+  tldr:[["Problem","A new venture needed a launch page that stops people in seconds, explains the offer, and converts two very different visitors: beginners and operators."],["What I did","Led with each visitor's situation, turned residents' thoughts into entry points, and tied the story to two conversion paths, in Figma and a working website."],["Result","Desktop and mobile designs, a component system, interactive prototypes, a live site, and a Loom walkthrough. Not yet tested with real users."]],
   sections:[
-    {id:"context",h:"Context",blocks:[
-      {p:"Bad Children Shop extends the Bad Children Paradise character world into a community tool. I designed it with the community operations team of an entertainment company, who wanted to manage and engage their member community."},
-      {p:"The product combines a physical capsule-toy machine with digital avatar identities and a home-building progression mode. I designed it in Figma and built a working prototype with Codex, React, Three.js, and Supabase."},
-      {img:{label:"System overview: physical machine, app, and community",ratio:"16/9"}}
+    {id:"brief",h:"The brief",blocks:[
+      {q:"Design a world-class landing page for our new venture. Capture attention immediately, make the value clear, and turn visitors into sign-ups."},
+      {steps:[["Goal","A launch page with an immediate “wow”, full creative freedom to push the visual boundaries."],["Success","Visitors understand the value proposition within seconds and choose to join."],["Handoff","One Figma file with clearly named frames and design notes, plus a five-minute video walkthrough."],["Walkthrough","Who it is for, the structure and why, the three decisions I am proudest of, and the first thing to test after launch."],["Sharing","Everything delivered as view links, nothing to download."]]},
+      {p:"Flex Academy is a sister website to The Flex, a short-term rental operator. It serves people starting their first rental and operators who need better systems to grow. I kept The Flex's core green to connect the two brands, and gave the operator route its own peach."},
+      {p:"The page has to answer four questions, in this order:"},
+      {cards:[["Is this for me?","Two clear routes: Launch for 0–1 units, Scale for existing operators."],["Why trust it?","The founders' operating experience and real product features, with no invented results."],["What will I get?","A side-by-side programme comparison, plus FAQs that answer objections."],["What do I do next?","A free webinar, a free strategy call, or a lower-commitment checklist."]]}
     ]},
-    {id:"research",h:"Research",blocks:[
-      {p:"I recruited a beta cohort of 30+ users and tested in two ways, so I could compare what people say with what they do."},
-      {cards:[["Remote, self-guided","Users explored on their own, then answered a follow-up questionnaire."],["In person, observed","I watched users live and noted where they hesitated or got stuck."]]}
+    {id:"decisions",h:"Key decisions",blocks:[
+      {h3:"Lead with the visitor's situation"},
+      {p:"Visitors see their own situation before any programme name. The main cards separate “I want to start” from “I’m ready to build a real company”, and each leads straight to its next step."},
+      {h3:"Make concerns clickable"},
+      {p:"The thoughts above the houses are entry points. Choosing “That’s me” opens the matching audience dialog, so a concern becomes a relevant next step. Inside the dialog, visitors can switch to the other route in one click without going home."},
+      {img:{label:"Audience dialog opened from a resident's thought",ratio:"1440/900",src:"img/flex-dialog.jpg"},cap:"A concern becomes a next step. The dialog names the operator's pains and leads to a call, with the checklist as a softer option."},
+      {h3:"Connect storytelling with action"},
+      {p:"The avenue unfolds with thoughts beside the road, then leads into the offer and registration or booking. Main actions never wait for the animation, skip controls are always there, and reduced motion is respected."},
+      {img:{label:"Sound familiar? Concerns for each audience",ratio:"1440/900",src:"img/flex-familiar.jpg"},cap:"“Sound familiar?” develops each audience's concerns, with the matching action under each column."},
+      {h3:"Build trust around visitor goals"},
+      {p:"The founders bring operating experience. Base360 examples show practical functionality without implying student success. I avoided invented testimonials and income claims."},
+      {img:{label:"Founders and the two aims",ratio:"1440/860",src:"img/flex-founders.jpg"}},
+      {img:{label:"Programme comparison: Launch and Scale",ratio:"1440/980",src:"img/flex-programmes.jpg"},cap:"The programme comparison explains what each route includes. Green and peach keep the same meaning from the first choice to the commitment step."},
+      {img:{label:"Mobile homepage",ratio:"780/1560",src:"img/flex-mobile.jpg",narrow:true},cap:"On mobile, both routes stay one tap away, with compact forms and recovery states."}
     ]},
-    {id:"insights",h:"Insights",blocks:[
-      {cards:[["Depth was invisible","Users fixated on the core pull screen and missed most deeper features."],["Social was the hook","The strongest positive feedback was about the acquaintance-based social layer and the community atmosphere."]]},
-      {q:"Instead of adding menus to surface depth, bring depth back into the core loop, and build it around people users already know."}
+    {id:"architecture",h:"Interaction architecture",blocks:[
+      {p:"Every invitation has a next step. I mapped both journeys from first choice to confirmation, plus the checklist path for people who are not ready to choose."},
+      {img:{label:"Interaction architecture in Figma",ratio:"1740/1835",src:"img/flex-figma-flow.jpg"},cap:"Launch: avenue, recognise the problem, register, confirm. Scale: avenue, recognise the problem, qualify and pick a time, confirm. Switching audience changes the route, not the promise."},
+      {img:{label:"Figma project overview",ratio:"1440/902",src:"img/flex-figma-overview.jpg"},cap:"The Figma file opens on a start-here page: prototypes, full layouts, architecture, components and states, and the design rationale."}
     ]},
-    {id:"solution",h:"Solution",blocks:[
-      {cards:[["The Nest","A home space where collected figures interact over time and create small story moments, delivered as postcards that go back into the user's own pool."],["Drift Pool","A shared public machine filled with postcards that users design with stickers and stamps, for others to pull."],["Airdrop","A planned in-person exchange for trading figures and cards, with tasks that unlock deeper content."]]},
-      {img:{label:"The Nest: home space screens",ratio:"16/10"}},
-      {img:{label:"Drift Pool: postcard creation and pull flow",ratio:"16/10"}},
-      {p:"Because the capsule animation hid deeper features, I added a direct-open alternative. The prototype also supports keyboard access, reduced motion, and both touch and mouse input."}
+    {id:"process",h:"Process",blocks:[
+      {steps:[["Audience and content","Defined the two audiences and the four questions the page must answer."],["Hierarchy","Ordered the page as situation, trust, offer, objections, action."],["Conversion paths","Designed registration, booking, confirmation, and recovery states."],["Web build","Built a working site with motion, forms, and both journeys."],["Simulated walkthroughs","Used AI-assisted walkthroughs as a hesitant beginner and a busy operator to challenge clarity and drop-off. These are hypotheses, not measured results."]]}
     ]},
-    {id:"outcome",h:"Outcome",blocks:[{p:"The product passed internal beta with the partner team. The redesigned features are in development. [[Add any numbers: retention, return visits, survey scores, or quotes.]]"}]},
-    {id:"reflection",h:"Reflection",blocks:[{p:"Observed sessions changed my priorities more than the survey did. Users rarely describe what they never found, so watching them was the only way to see the gap. [[Edit in your own words]]"}]}
+    {id:"next",h:"What I'd do next",blocks:[
+      {p:"My first test after launch would ask both audiences to choose a route, and watch for hesitation, switching, and abandonment before registration or booking. With two more days, I would run usability sessions, fix the main friction, and refine the homepage motion so its pacing suits both users and The Flex brand."},
+      {p:"Forms, dates, and prices X / Y are samples. No real email or calendar booking is sent."}
+    ]}
   ]
 },
 {
@@ -593,52 +640,74 @@ const CASES = [
   ]
 },
 {
-  id:"flex", tag:"Web · Conversion", short:"2026", kind:"mini", tint:"--t4",
-  eyebrow:"Landing page · Venture launch", year:"2026",
-  title:"Flex Academy",
-  summary:"One landing page for two audiences: first-time rental owners and growing operators. Designed in Figma and built as a working website.",
-  subtitle:"A sister site to The Flex that serves two audiences at once: people starting their first short-term rental, and operators who need systems to grow.",
-  chips:["Landing page","Conversion","Motion","Figma"],
-  meta:[["Role","Product Designer, solo"],["Brief","Launch page for a new venture"],["Tools","Figma, AI-assisted web build"],["Platform","Web, desktop and mobile"]],
-  links:[["Live website","https://didiisliuzhihan.github.io/flex-academy/"],["Figma design","https://www.figma.com/design/iwDQR0PKHo8j8FlCNg2niF/flex?node-id=80-2934"],["Mobile prototype","https://www.figma.com/proto/iwDQR0PKHo8j8FlCNg2niF/flex?node-id=31-1030&starting-point-node-id=31%3A1030"],["Loom walkthrough","https://www.loom.com/share/4388e9f56ad648ba8eaa5f40f2b751f1"]],
-  hero:{label:"Flex Academy homepage",ratio:"1440/900",src:"img/flex-hero.jpg"},
-  card:"img/flex-cover.jpg",
-  immersive:{url:"https://didiisliuzhihan.github.io/flex-academy/",poster:"img/flex-hero.jpg",label:"Flex Academy homepage"},
-  tldr:[["Problem","A new venture needed a launch page that stops people in seconds, explains the offer, and converts two very different visitors: beginners and operators."],["What I did","Led with each visitor's situation, turned residents' thoughts into entry points, and tied the story to two conversion paths, in Figma and a working website."],["Result","Desktop and mobile designs, a component system, interactive prototypes, a live site, and a Loom walkthrough. Not yet tested with real users."]],
+  id:"bad-children-shop", tag:"Community", short:"2026", kind:"feature", tint:"--t2",
+  eyebrow:"Community · Web app", year:"2026",
+  title:"Bad Children Shop",
+  summary:"A gamified web app that turns a capsule-toy machine into a social space for people who already know each other. Designed and built end to end.",
+  subtitle:"A gamified web app that reimagines the capsule-toy machine as the start of an acquaintance-based community, blending online play with offline collectible culture.",
+  chips:["Gamification","Social design","User testing","Prototyping"],
+  meta:[["Role","Sole designer and builder"],["Partner","Community team, entertainment company"],["Timeline","2026 · In development"],["Platform","Mobile web and desktop"]],
+  links:[["Play the live app","https://didiisliuzhihan.github.io/bad-children-shop/"],["Full case on zhihanliu.art","https://www.zhihanliu.art/bad-children-shop"]],
+  hero:{label:"Bad Children Shop on desktop and mobile",ratio:"1800/1013",src:"img/bcs-hero.jpg"},
+  card:"img/bcs-cover.jpg",
+  immersive:{url:"https://didiisliuzhihan.github.io/bad-children-shop/",poster:"img/bcs-hero.jpg",label:"Bad Children Shop live app",device:"phone",cta:"Play the live app",note:"The real app in a phone frame. Swipe the machine, slide the capsule open, and browse your bag. Local play only: nothing is saved to an account."},
+  tldr:[["Problem","People came for the draw and missed everything after it. The partner wanted collectibles that bring members who already know each other closer."],["What I did","Designed in Figma and built a working prototype with Codex, tested it with 30+ early participants, and grew one draw into three connected loops."],["Result","A live, iterating prototype. The social layer resonated most. Retention uplift is not yet established."]],
   sections:[
-    {id:"brief",h:"The brief",blocks:[
-      {q:"Design a world-class landing page for our new venture. Capture attention immediately, make the value clear, and turn visitors into sign-ups."},
-      {steps:[["Goal","A launch page with an immediate “wow”, full creative freedom to push the visual boundaries."],["Success","Visitors understand the value proposition within seconds and choose to join."],["Handoff","One Figma file with clearly named frames and design notes, plus a five-minute video walkthrough."],["Walkthrough","Who it is for, the structure and why, the three decisions I am proudest of, and the first thing to test after launch."],["Sharing","Everything delivered as view links, nothing to download."]]},
-      {p:"Flex Academy is a sister website to The Flex, a short-term rental operator. It serves people starting their first rental and operators who need better systems to grow. I kept The Flex's core green to connect the two brands, and gave the operator route its own peach."},
-      {p:"The page has to answer four questions, in this order:"},
-      {cards:[["Is this for me?","Two clear routes: Launch for 0–1 units, Scale for existing operators."],["Why trust it?","The founders' operating experience and real product features, with no invented results."],["What will I get?","A side-by-side programme comparison, plus FAQs that answer objections."],["What do I do next?","A free webinar, a free strategy call, or a lower-commitment checklist."]]}
+    {id:"context",h:"Problem and motivation",blocks:[
+      {p:"Developed with the community team of an entertainment company, Bad Children Shop explores how collectible characters can encourage interaction among people who already know one another."},
+      {p:"The experience connects digital capsule collecting with shared stories, community-made postcards, and tasks that extend into face-to-face moments. All pre-written scenarios come from the partner's past online community data."}
     ]},
-    {id:"decisions",h:"Key decisions",blocks:[
-      {h3:"Lead with the visitor's situation"},
-      {p:"Visitors see their own situation before any programme name. The main cards separate “I want to start” from “I’m ready to build a real company”, and each leads straight to its next step."},
-      {h3:"Make concerns clickable"},
-      {p:"The thoughts above the houses are entry points. Choosing “That’s me” opens the matching audience dialog, so a concern becomes a relevant next step. Inside the dialog, visitors can switch to the other route in one click without going home."},
-      {img:{label:"Audience dialog opened from a resident's thought",ratio:"1440/900",src:"img/flex-dialog.jpg"},cap:"A concern becomes a next step. The dialog names the operator's pains and leads to a call, with the checklist as a softer option."},
-      {h3:"Connect storytelling with action"},
-      {p:"The avenue unfolds with thoughts beside the road, then leads into the offer and registration or booking. Main actions never wait for the animation, skip controls are always there, and reduced motion is respected."},
-      {img:{label:"Sound familiar? Concerns for each audience",ratio:"1440/900",src:"img/flex-familiar.jpg"},cap:"“Sound familiar?” develops each audience's concerns, with the matching action under each column."},
-      {h3:"Build trust around visitor goals"},
-      {p:"The founders bring operating experience. Base360 examples show practical functionality without implying student success. I avoided invented testimonials and income claims."},
-      {img:{label:"Founders and the two aims",ratio:"1440/860",src:"img/flex-founders.jpg"}},
-      {img:{label:"Programme comparison: Launch and Scale",ratio:"1440/980",src:"img/flex-programmes.jpg"},cap:"The programme comparison explains what each route includes. Green and peach keep the same meaning from the first choice to the commitment step."},
-      {img:{label:"Mobile homepage",ratio:"780/1560",src:"img/flex-mobile.jpg",narrow:true},cap:"On mobile, both routes stay one tap away, with compact forms and recovery states."}
+    {id:"research",h:"Research",blocks:[
+      {q:"They came for the draw. They valued the people."},
+      {cards:[["30+ early participants","A small formative test group, not a representative market sample."],["Remote","Self-guided play followed by a short questionnaire."],["In person","One group session, observing confusion and interaction live."]]},
+      {cards:[["Discovery gap","Deeper features went unnoticed. Self-guided participants stayed focused on drawing capsules."],["Social signal","The familiar context resonated. Positive feedback centred on known relationships and the in-community atmosphere."]]},
+      {p:"I designed for two working motivations, not validated personas: connection-oriented members who enjoy shared references and playful exchanges, and character-oriented collectors who want surprise, affection, and discovery."}
     ]},
-    {id:"architecture",h:"Interaction architecture",blocks:[
-      {p:"Every invitation has a next step. I mapped both journeys from first choice to confirmation, plus the checklist path for people who are not ready to choose."},
-      {img:{label:"Interaction architecture in Figma",ratio:"1740/1835",src:"img/flex-figma-flow.jpg"},cap:"Launch: avenue, recognise the problem, register, confirm. Scale: avenue, recognise the problem, qualify and pick a time, confirm. Switching audience changes the route, not the promise."},
-      {img:{label:"Figma project overview",ratio:"1440/902",src:"img/flex-figma-overview.jpg"},cap:"The Figma file opens on a start-here page: prototypes, full layouts, architecture, components and states, and the design rationale."}
+    {id:"strategy",h:"Strategy",blocks:[
+      {q:"Collect. Connect. Come back."},
+      {p:"Give each draw somewhere to lead, and each interaction something to leave behind. The product grew from one loop into three."},
+      {steps:[["Character stories","Private. Collect a character, discover Nest stories, draw a story postcard."],["Community contribution","Shared. Make a postcard, release it into the pool, someone discovers it."],["Beyond the screen","Online to offline. Receive a task, interact in person, unlock deeper content."]]},
+      {p:"Design principle: the collectible is the conversation starter."},
+      {img:{label:"User flow",ratio:"2000/1125",src:"img/bcs-flow.jpg"},cap:"From the machine to the bag, then three branches: the Nest and its story theater, the collection and each toy's model, card, and story, and DIY postcards that feed the shared gacha pool."}
     ]},
-    {id:"process",h:"Process",blocks:[
-      {steps:[["Audience and content","Defined the two audiences and the four questions the page must answer."],["Hierarchy","Ordered the page as situation, trust, offer, objections, action."],["Conversion paths","Designed registration, booking, confirmation, and recovery states."],["Web build","Built a working site with motion, forms, and both journeys."],["Simulated walkthroughs","Used AI-assisted walkthroughs as a hesitant beginner and a busy operator to challenge clarity and drop-off. These are hypotheses, not measured results."]]}
+    {id:"capsule",h:"Capsule interaction",blocks:[
+      {h3:"Make the gesture part of the surprise"},
+      {p:"A moving light follows the curved seam. Drag either way and the shell separates to reveal the character. Light suggests a direction, the shell follows the hand, and the reveal returns you to your original decision."},
+      {videos:[{src:"media/bcs-open.mp4",poster:"media/bcs-open.jpg",label:"Opening the capsule"},{src:"media/bcs-bag.mp4",poster:"media/bcs-bag.jpg",label:"My capsule bag: swipe to browse"}],ratio:"480/854",narrow:true},
+      {p:"Because testers fixated on the draw, I added a direct-open alternative for people who just want the character. The flow supports touch and mouse, keyboard access, and reduced motion."}
     ]},
-    {id:"next",h:"What I'd do next",blocks:[
-      {p:"My first test after launch would ask both audiences to choose a route, and watch for hesitation, switching, and abandonment before registration or booking. With two more days, I would run usability sessions, fix the main friction, and refine the homepage motion so its pacing suits both users and The Flex brand."},
-      {p:"Forms, dates, and prices X / Y are samples. No real email or calendar booking is sent."}
+    {id:"nest",h:"The Nest",blocks:[
+      {h3:"A collection that keeps living"},
+      {p:"After the draw, characters share a home, develop relationships, and generate small stories that return as surprise postcards. You arrange the room, tap characters for sounds without breaking the ambience, and watch relationships unfold through small scenes."},
+      {imgs:[{src:"img/bcs-nest-day.jpg",label:"Day: a shared setting"},{src:"img/bcs-nest-night.jpg",label:"Night: a different atmosphere"}]}
+    ]},
+    {id:"social",h:"Social participation",blocks:[
+      {h3:"A little message. A familiar face."},
+      {cards:[["Shared postcard pool","Make a card with images, memes, and stamps, and let another member discover it."],["Character tasks","A playful prompt connects the digital collectible to an in-person moment."],["Exploring next","Face-to-face card and capsule exchanges through AirDrop."]]},
+      {imgs:[{src:"img/bcs-toycard.jpg",label:"A character card becomes an invitation"}],ratio:"384/469",narrow:true}
+    ]},
+    {id:"wireframes",h:"Wireframes",blocks:[
+      {p:"To suit mobile, I rebuilt the card collection around swipe-to-browse and a tap to meet each character, while the page outside the cards still scrolls."},
+      {imgs:[{src:"img/bcs-wf-6550b084.jpg",label:"Card stack"},{src:"img/bcs-wf-d626e15b.jpg",label:"Swipe"},{src:"img/bcs-wf-729b4b7a.jpg",label:"Next card"},{src:"img/bcs-wf-6abffa8b.jpg",label:"Toy detail"}],ratio:"390/844",cols:4}
+    ]},
+    {id:"iteration",h:"Craft and iteration",blocks:[
+      {q:"Playful on the surface. Considered underneath."},
+      {steps:[["Reveal framing","New characters exceeded the reveal frame. I adjusted model scale and framing across screen sizes."],["Saving speed","Saving and card loading felt slow. I decoupled feedback from full collection reloads and kept failures recoverable."],["Playful English","English lost the playful tone. I adapted wording, typography, and spacing instead of only translating labels."]]}
+    ]},
+    {id:"outcomes",h:"Outcomes and next steps",blocks:[
+      {cards:[["Observed","The social context resonated. Early feedback valued familiar relationships and the in-community atmosphere."],["Still open","Discovery remains a design question. Adding depth is not the same as making it easy to find."]]},
+      {p:"Next I want to learn three things: whether people move beyond drawing into the Nest and postcards, whether tasks and cards lead to interaction with familiar people, and what brings them back, another draw, a character, or the community."},
+      {q:"A collectible can be more than something to own. It can be a reason to connect."},
+      {p:"Retention uplift has not yet been established. AirDrop exchange remains a future concept."}
+    ]},
+    {id:"misfits",h:"Meet the misfits",wide:true,blocks:[
+      {p:"Every character has a card, a 3D model, and a short story read in English over the original Chinese audio. Swipe through them the way you would in the app."},
+      {dex:[
+        {n:"03",name:"Stressed Jimao",img:"img/bcs-g-jimao-card.jpg",model:"img/bcs-g-jimao-model.jpg",photo:"img/bcs-g-jimao-story.jpg",line:"Says \u201cI\u2019m fine.\u201d Forecast: thunderstorms",task:"Do one small favor for Jimao this week",quote:"Do I look okay?",story:"Nine forecasts out of ten predict little thunderstorms over Jimao\u2019s head. Even with lightning wired to its brain, it grins: \u201cNo big deal.\u201d Those drooping eyelids have already waved a white flag. Let it rest while the little storm passes."},
+        {n:"04",name:"Miss Popcorn",img:"img/bcs-g-popcorn-card.jpg",model:"img/bcs-g-popcorn-model.jpg",photo:"img/bcs-g-popcorn-story.jpg",line:"You\u2019ve set Miss Popcorn off. Again",task:"Tell her, \u201cDon\u2019t fret. You\u2019re gorgeous.\u201d",quote:"Today\u2019s housework allowance is used up.",story:"Popcorn rattles her keys as if announcing an official strike. But each time she says, \u201cNext time you\u2019re on your own,\u201d she quietly sets out your favorite cup. Her grumbling doesn\u2019t mean she dislikes you. Today, she\u2019d just like a turn at being cared for."},
+        {n:"05",name:"Whatever Dua",img:"img/bcs-g-dua-model.jpg",model:"img/bcs-g-dua-model.jpg",photo:"img/bcs-g-dua-story.jpg",line:"No answers yet. The sitting position is sorted.",task:"Sit with Dua for a while",quote:"Answers can wait.",story:"Dua wraps up in a towel, flops into the red chair and announces that its brain is closed for the day. When you ask what to do, it makes room: why not sit for a while? Answers can wait. Resting together doesn\u2019t have to."},
+        {n:"06",name:"Office Hulu",img:"img/bcs-g-hulu-card.jpg",model:"img/bcs-g-hulu-model.jpg",photo:"img/bcs-g-hulu-story.jpg",line:"Finally a grown-up. Serious for one whole second",task:"Clink glasses with Hulu today",quote:"Today\u2019s market: the butt calls the shots.",story:"Hulu finally has a tie and a white-collar job as a stock manager, mostly to cause office chaos. While others wait for the market, he announces his rear is on the rise. He straightens his tie, and one serious second later he is laughing again."}
+      ]}
     ]}
   ]
 }
@@ -799,9 +868,26 @@ function block(b){
   if(b.q) return `<p class="q">${fmt(b.q)}</p>`;
   if(b.img) return `<div${b.img.narrow?' class="narrow"':""}>${ph(b.img)}${b.cap?`<figcaption>${fmt(b.cap)}</figcaption>`:""}</div>`;
   if(b.framework) return `<figure class="fw-fig">${frameworkHTML()}${b.cap?`<figcaption>${fmt(b.cap)}</figcaption>`:""}</figure>`;
+  if(b.dex) return `<div class="dex" data-dex tabindex="0" role="group" aria-roledescription="carousel" aria-label="Character cards">
+      <div class="dex-stage">${b.dex.map((d,i)=>`<article class="dex-card" data-i="${i}" aria-label="${esc(d.name)}">
+        <div class="dex-in">
+          <div class="dex-face dex-front">
+            <div class="dex-art"><img src="${esc(d.img)}" alt="${esc(d.name)} card art" draggable="false"><span class="dex-tag">The Little Misfits</span><span class="dex-no">${esc(d.n)}</span></div>
+            <h4>${esc(d.name)}</h4><p class="dex-line">${esc(d.line)}</p><p class="dex-task">${esc(d.task)}</p>
+            <span class="dex-flip">Tap to read their story ↻</span>
+          </div>
+          <div class="dex-face dex-back">
+            <div class="dex-photo"><img src="${esc(d.photo)}" alt="Story photo for ${esc(d.name)}" draggable="false"><img class="dex-model" src="${esc(d.model)}" alt="${esc(d.name)} 3D model" draggable="false"></div>
+            <p class="dex-q">${esc(d.quote)}</p><p class="dex-story">${esc(d.story)}</p>
+            <span class="dex-flip">Tap to flip back ↻</span>
+          </div>
+        </div></article>`).join("")}</div>
+      <div class="dex-nav"><button type="button" class="dex-btn" data-dir="-1" aria-label="Previous character">←</button><span class="dex-count" aria-live="polite">1 / ${b.dex.length}</span><button type="button" class="dex-btn" data-dir="1" aria-label="Next character">→</button></div>
+      <p class="dex-hint">Swipe to browse · Tap a card to meet them</p>
+    </div>`;
   if(b.h3) return `<h3 class="sub">${fmt(b.h3)}</h3>`;
-  if(b.imgs) return `<div class="imgs">${b.imgs.map(i=>`<figure><img src="${esc(i.src)}" alt="${esc(i.label)}" loading="lazy"><figcaption>${fmt(i.label)}</figcaption></figure>`).join("")}</div>`;
-  if(b.videos) return `<div class="vids">${b.videos.map(v=>`<figure><video src="${esc(v.src)}" poster="${esc(v.poster)}" muted loop playsinline autoplay preload="metadata"></video><figcaption>${fmt(v.label)}</figcaption></figure>`).join("")}</div>`;
+  if(b.imgs) return `<div class="imgs${b.narrow?" narrowset":""}" style="${b.ratio?`--ar:${b.ratio};`:""}${b.cols?`grid-template-columns:repeat(${b.cols},minmax(0,1fr));`:`grid-template-columns:repeat(${Math.min(b.imgs.length,3)},minmax(0,1fr));`}">${b.imgs.map(i=>`<figure><img src="${esc(i.src)}" alt="${esc(i.label)}" loading="lazy"><figcaption>${fmt(i.label)}</figcaption></figure>`).join("")}</div>`;
+  if(b.videos) return `<div class="vids${b.narrow?" narrowset":""}" style="${b.ratio?`--ar:${b.ratio};`:""}">${b.videos.map(v=>`<figure><video src="${esc(v.src)}" poster="${esc(v.poster)}" muted loop playsinline autoplay preload="metadata"></video><figcaption>${fmt(v.label)}</figcaption></figure>`).join("")}</div>`;
   if(b.demo) return `<div class="proto demo">
       <div class="proto-top">
         <div class="seg" role="group" aria-label="Demo view">
@@ -820,14 +906,44 @@ function block(b){
   return "";
 }
 
+function wireDex(root){
+  const cards=[...root.querySelectorAll(".dex-card")], n=cards.length, count=root.querySelector(".dex-count");
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let order=cards.map((_,i)=>i), drag=null;
+  const place=()=>{
+    order.forEach((ci,k)=>{const el=cards[ci];
+      el.style.zIndex=n-k; el.classList.toggle("top",k===0);
+      el.style.transition=reduce?"none":"";
+      el.style.transform=k===0?"none":`translate(${k*7}px,${-k*10}px) rotate(${k%2?2.5:-2}deg) scale(${1-k*.04})`;
+      el.style.opacity=k>2?0:1; el.setAttribute("aria-hidden",k!==0);
+      if(k!==0) el.classList.remove("flipped");
+    });
+    count.textContent=`${cards.indexOf(cards[order[0]])+1} / ${n}`;
+  };
+  const go=dir=>{
+    const top=cards[order[0]];
+    if(dir>0){ top.style.transform=`translate(-120%,20px) rotate(-14deg)`; top.style.opacity=0; setTimeout(()=>{order.push(order.shift()); place();},reduce?0:260); }
+    else { order.unshift(order.pop()); const el=cards[order[0]]; el.style.transition="none"; el.style.transform="translate(-120%,20px) rotate(-14deg)"; el.style.opacity=0; el.style.zIndex=n+1; requestAnimationFrame(()=>requestAnimationFrame(place)); }
+  };
+  root.querySelectorAll(".dex-btn").forEach(b=>b.addEventListener("click",()=>go(+b.dataset.dir)));
+  root.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"){go(1);e.preventDefault();} if(e.key==="ArrowLeft"){go(-1);e.preventDefault();} });
+  cards.forEach(el=>{
+    el.addEventListener("pointerdown",e=>{ if(!el.classList.contains("top")) return; drag={x:e.clientX,y:e.clientY,dx:0,id:e.pointerId}; el.style.transition="none"; });
+    el.addEventListener("pointermove",e=>{ if(!drag) return; drag.dx=e.clientX-drag.x; if(Math.abs(drag.dx)>6){ el.setPointerCapture(drag.id); el.style.transform=`translate(${drag.dx}px,${Math.abs(drag.dx)*.05}px) rotate(${drag.dx*.05}deg)`; } });
+    const end=()=>{ if(!drag) return; const dx=drag.dx; drag=null; el.style.transition="";
+      if(dx<-70) go(1); else if(dx>70) go(-1); else { if(Math.abs(dx)<6) el.classList.toggle("flipped"); place(); } };
+    el.addEventListener("pointerup",end); el.addEventListener("pointercancel",end);
+  });
+  place();
+}
 function immersiveHTML(c){
   const im=c.immersive, live=!!im.url;
-  return `<section class="immersive" aria-label="${esc(im.label)}">
+  return `<section class="immersive${im.device==="phone"?" phone":""}" aria-label="${esc(im.label)}">
     <div class="imm-stage" id="immStage">
       <img src="${esc(im.poster)}" alt="${esc(im.label)}">
-      ${live?`<button type="button" class="imm-go" id="immGo">Enter the live homepage <span>▶</span></button>`:`<span class="imm-soon">Live site deploying</span>`}
+      ${live?`<button type="button" class="imm-go" id="immGo">${esc(im.cta||"Enter the live homepage")} <span>▶</span></button>`:`<span class="imm-soon">Live site deploying</span>`}
     </div>
-    ${live?`<p class="imm-note">The real homepage with its opening animation. Hover the houses, open a resident's thought, and scroll inside the frame, or <a href="${esc(im.url)}" target="_blank" rel="noopener">open it full screen ↗</a>.</p>`:""}
+    ${live?`<p class="imm-note">${esc(im.note||"The real homepage with its opening animation. Hover the houses, open a resident\u2019s thought, and scroll inside the frame.")} <a href="${esc(im.url)}" target="_blank" rel="noopener">Open it full screen ↗</a></p>`:""}
   </section>`;
 }
 function wireImmersive(c){
@@ -835,7 +951,8 @@ function wireImmersive(c){
   go.addEventListener("click",()=>{
     const st=document.getElementById("immStage");
     st.classList.add("on");
-    st.innerHTML=`<iframe src="${esc(c.immersive.url)}" title="${esc(c.immersive.label)}" allow="autoplay; fullscreen"></iframe>`;
+    const fr=`<iframe src="${esc(c.immersive.url)}" title="${esc(c.immersive.label)}" allow="autoplay; fullscreen"></iframe>`;
+    st.innerHTML=c.immersive.device==="phone"?`<div class="imm-phone">${fr}</div>`:fr;
   });
 }
 function embedHTML(c){
@@ -911,6 +1028,7 @@ function renderCase(c){
   document.querySelectorAll(".chapter > .mono").forEach(m=>m.remove());
   if(c.embed) wireEmbed(c);
   if(c.immersive) wireImmersive(c);
+  document.querySelectorAll("[data-dex]").forEach(wireDex);
   document.querySelectorAll(".proto.demo").forEach(box=>{
     const v=box.querySelector("video"), fr=box.querySelector("iframe");
     box.querySelectorAll("[data-view]").forEach(btn=>btn.addEventListener("click",()=>{
