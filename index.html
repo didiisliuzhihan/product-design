@@ -561,6 +561,15 @@ const CASES = [
   ]
 },
 {
+  /* Standalone case study published at /carepath/. href sends the card there instead of the in-page case view. */
+  id:"carepath", tag:"Healthcare", short:"2026", kind:"feature", tint:"--t3",
+  href:"carepath/", year:"2026",
+  title:"CarePath",
+  summary:"Helping older adults understand a medical bill, check it step by step, and invite a caregiver on their own terms.",
+  meta:[["Role","Product Designer"],["Type","Independent concept"],["Timeline","2026"],["Platform","Mobile web prototype"]],
+  hero:{label:"Illustrative scene: an older adult reads a hospital letter with her phone",ratio:"3/2",src:"carepath/assets/carepath-context.webp"}
+},
+{
   id:"flex", tag:"Web · Conversion", short:"2026", kind:"mini", tint:"--t4",
   eyebrow:"Landing page · Venture launch", year:"2026",
   title:"Flex Academy",
@@ -802,7 +811,7 @@ function renderHome(){
     el.className="hanger";
     el.innerHTML=`
       <span class="clip"></span><span class="string"></span>
-      <a class="card3d" href="#${c.id}" aria-label="${esc(c.title)}: ${isCase?"read case study":"view exercise"}">
+      <a class="card3d" href="${c.href||"#"+c.id}" aria-label="${esc(c.title)}: ${isCase?"read case study":"view exercise"}">
         <div class="face front">
           <div class="ctop"><span class="mono">${esc(c.tag)}</span><span class="mono">${esc(c.short)}</span></div>
           <div class="cimg">${ph({label:c.hero.label,ratio:"5/4",src:c.card||c.hero.src},c.tint)}</div>
@@ -837,7 +846,7 @@ function renderHome(){
   });
   // Plain index under the line, for quick scanning
   document.getElementById("workIndex").innerHTML=CASES.map(c=>`
-    <a class="lrow" href="#${c.id}"><span class="n">${fmt(c.title)}</span><span class="d">${fmt(c.summary)}</span><span class="y">${c.kind==="feature"?"Case study":"Exercise"}</span><span class="go">→</span></a>`).join("");
+    <a class="lrow" href="${c.href||"#"+c.id}"><span class="n">${fmt(c.title)}</span><span class="d">${fmt(c.summary)}</span><span class="y">${c.kind==="feature"?"Case study":"Exercise"}</span><span class="go">→</span></a>`).join("");
   layoutRail();
   addEventListener("resize",layoutRail);
   bindSwing();
@@ -1154,7 +1163,7 @@ function renderCase(c){
       <nav class="toc" aria-label="Sections"><p class="mono">On this page</p>${c.sections.map(s=>`<a href="#${c.id}" data-target="s-${s.id}">${esc(s.h)}</a>`).join("")}</nav>
       <div>
         ${c.sections.map(s=>`<section class="chapter${s.wide?" wide":""}" id="s-${s.id}"><p class="mono">${esc(s.h)}</p><h2>${esc(s.h)}</h2><div class="prose">${s.blocks.map(block).join("")}</div></section>`).join("")}
-        <a class="next" href="#${nx.id}"><div><p class="mono">Next project</p><h3>${fmt(nx.title)}</h3></div><span class="go">→</span></a>
+        <a class="next" href="${nx.href||"#"+nx.id}"><div><p class="mono">Next project</p><h3>${fmt(nx.title)}</h3></div><span class="go">→</span></a>
       </div>
     </div>`;
   // TOC: scroll without changing the hash
@@ -1196,6 +1205,7 @@ function route(){
   const h=decodeURIComponent(location.hash.slice(1));
   const c=CASES.find(x=>x.id===h);
   const home=document.getElementById("home"), cs=document.getElementById("case");
+  if(c&&c.href){ location.replace(c.href); return; }
   if(c){
     renderCase(c); home.hidden=true; cs.hidden=false;
     document.title=`${c.title} · Zhihan Liu`;
