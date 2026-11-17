@@ -1,0 +1,77 @@
+{
+  "study": "CarePath formative research",
+  "status": "blank template — no findings",
+  "participantCode": "",
+  "group": "older-adult / caregiver",
+  "language": "",
+  "device": "",
+  "consent": {
+    "participation": false,
+    "recording": false,
+    "anonymousQuote": false
+  },
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "理解文件",
+      "observedBehavior": "",
+      "quoteWithPermission": "",
+      "assistanceLevel": "A0 / A1 / A2 / A3",
+      "outcome": "independent / assisted / incomplete",
+      "interpretation": "",
+      "severity": "",
+      "proposedChange": "",
+      "retestEvidence": ""
+    },
+    {
+      "id": "T2",
+      "title": "处理缺失信息",
+      "observedBehavior": "",
+      "quoteWithPermission": "",
+      "assistanceLevel": "A0 / A1 / A2 / A3",
+      "outcome": "independent / assisted / incomplete",
+      "interpretation": "",
+      "severity": "",
+      "proposedChange": "",
+      "retestEvidence": ""
+    },
+    {
+      "id": "T3",
+      "title": "修改回答",
+      "observedBehavior": "",
+      "quoteWithPermission": "",
+      "assistanceLevel": "A0 / A1 / A2 / A3",
+      "outcome": "independent / assisted / incomplete",
+      "interpretation": "",
+      "severity": "",
+      "proposedChange": "",
+      "retestEvidence": ""
+    },
+    {
+      "id": "T4",
+      "title": "模糊文件求助",
+      "observedBehavior": "",
+      "quoteWithPermission": "",
+      "assistanceLevel": "A0 / A1 / A2 / A3",
+      "outcome": "independent / assisted / incomplete",
+      "interpretation": "",
+      "severity": "",
+      "proposedChange": "",
+      "retestEvidence": ""
+    },
+    {
+      "id": "T5",
+      "title": "撤回并保留下一步",
+      "observedBehavior": "",
+      "quoteWithPermission": "",
+      "assistanceLevel": "A0 / A1 / A2 / A3",
+      "outcome": "independent / assisted / incomplete",
+      "interpretation": "",
+      "severity": "",
+      "proposedChange": "",
+      "retestEvidence": ""
+    }
+  ],
+  "limitations": [],
+  "retentionDate": ""
+}

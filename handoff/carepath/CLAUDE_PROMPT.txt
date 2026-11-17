@@ -1,0 +1,11 @@
+请接手 CarePath 的部署，使用 GitHub 仓库 didiisliuzhihan/product-design 的 handoff/carepath-2026-11-17 分支。
+
+先完整阅读根目录 CAREPATH_CLAUDE_HANDOFF.md，再阅读 handoff/carepath/source/CLAUDE.md、handoff/carepath/docs/DEPLOYMENT.md 和 QA.md。
+
+目标是把 CarePath 作为独立项目部署到 https://productdesign.zhihanliu.art/carepath/，保留当前综合作品集首页、其他作品和 CNAME。在原首页按既有样式补充 CarePath 入口，不要把 CarePath 页面替换成整个域名的首页。
+
+carepath/ 已包含构建好的静态发布文件；可编辑源码在 handoff/carepath/source/，默认 basePath=/carepath/。请核实当前 Pages 部署来源，必要时从源码重建，先检查差异并预览，再沿用此仓库现有部署流程。手机设备图片、字体、两端协作和撤回必须在子路径下正常工作。
+
+保持现有设计与文案，不重新设计。保留首页的五项策略导图、三个紧凑分类与全宽展开区、授权→协助→撤回的手机图示；保留双手机可操作原型和同步交互说明。研究尚未开展，不能写成真实研究成果；权限是本地演示，不能声称已实现真实身份认证或服务端鉴权。
+
+完成后提供正式链接、实际发布提交、桌面/手机检查结果和回滚方式。若无法访问部署设置，请说明具体缺少的权限；不要猜测或修改 DNS。
